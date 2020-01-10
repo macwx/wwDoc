@@ -1,12 +1,12 @@
-# ¿ª·¢»·¾³ÅäÖÃ
+# å¼€å‘ç¯å¢ƒé…ç½®
 server:
-  # ·şÎñÆ÷µÄHTTP¶Ë¿Ú£¬Ä¬ÈÏÎª80
+  # æœåŠ¡å™¨çš„HTTPç«¯å£ï¼Œé»˜è®¤ä¸º80
   port: 80
   servlet:
-    # Ó¦ÓÃµÄ·ÃÎÊÂ·¾¶
+    # åº”ç”¨çš„è®¿é—®è·¯å¾„
     context-path: /
 
-# SpringÅäÖÃ
+# Springé…ç½®
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -14,40 +14,40 @@ spring:
     url: jdbc:mysql://39.105.167.160:3306/wwapi?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
     username: root
     password: Admin123!
-  # Ä£°åÒıÇæ
+  # æ¨¡æ¿å¼•æ“
   thymeleaf:
     mode: HTML
     encoding: utf-8
-    # ½ûÓÃ»º´æ
+    # ç¦ç”¨ç¼“å­˜
     cache: false
     prefix: classpath:/templates/
     suffix: .html
     servlet:
       content-type: text/html
-  # ×ÊÔ´ĞÅÏ¢
+  # èµ„æºä¿¡æ¯
   messages:
-    # ¹ú¼Ê»¯×ÊÔ´ÎÄ¼şÂ·¾¶
+    # å›½é™…åŒ–èµ„æºæ–‡ä»¶è·¯å¾„
     basename: static/i18n/messages
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
-    # ÎÄ¼şÉÏ´«
+    # æ–‡ä»¶ä¸Šä¼ 
   servlet:
     multipart:
-      # µ¥¸öÎÄ¼ş´óĞ¡
+      # å•ä¸ªæ–‡ä»¶å¤§å°
       max-file-size:  10MB
-      # ÉèÖÃ×ÜÉÏ´«µÄÎÄ¼ş´óĞ¡
+      # è®¾ç½®æ€»ä¸Šä¼ çš„æ–‡ä»¶å¤§å°
       max-request-size:  20MB
-    # ·şÎñÄ£¿é
+    # æœåŠ¡æ¨¡å—
   devtools:
     restart:
-      # ÈÈ²¿Êğ¿ª¹Ø
+      # çƒ­éƒ¨ç½²å¼€å…³
       enabled: true
 
 
 # MyBatis
 mybatis-plus:
-  # ËÑË÷Ö¸¶¨°ü±ğÃû
+  # æœç´¢æŒ‡å®šåŒ…åˆ«å
   typeAliasesPackage: com.macw.wwdoc.entity
-  # ÅäÖÃmapperµÄÉ¨Ãè£¬ÕÒµ½ËùÓĞµÄmapper.xmlÓ³ÉäÎÄ¼ş
+  # é…ç½®mapperçš„æ‰«æï¼Œæ‰¾åˆ°æ‰€æœ‰çš„mapper.xmlæ˜ å°„æ–‡ä»¶
   mapperLocations: classpath*:mapper/*Mapper.xml
