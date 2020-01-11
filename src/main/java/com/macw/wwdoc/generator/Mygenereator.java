@@ -56,13 +56,13 @@ public class Mygenereator {
 //        gc.setSwagger2(true);
         mpg.setGlobalConfig(gc);
 
-        // 数据源配置f
+        // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://39.105.167.160:3306/wwapi?serverTimezone=CTT&useUnicode=true&useSSL=false&characterEncoding=utf8");
+        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/ww_api?serverTimezone=CTT&useUnicode=true&useSSL=false&characterEncoding=utf8");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("Admin123!");
+        dsc.setPassword("root");
         mpg.setDataSource(dsc);
 
         // 包配置
@@ -116,12 +116,12 @@ public class Mygenereator {
         // strategy.setSuperControllerClass("com.macw.BaseController");
         // 写于父类中的公共字段
 //        strategy.setSuperEntityColumns("id");
-//        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
+        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
         strategy.setTablePrefix("api_");
         strategy.setControllerMappingHyphenStyle(true);
 //        strategy.setTablePrefix(pc.getModuleName() + "_");
         //设置所有的表自动创建
-        strategy.setLikeTable(new LikeTable(""));
+//        strategy.setLikeTable(new LikeTable(""));
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();
