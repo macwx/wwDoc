@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author Macw
- * @since 2020-01-11
+ * @since 2020-01-14
  */
 public interface IApidetailService extends IService<Apidetail> {
 

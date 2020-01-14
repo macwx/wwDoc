@@ -1,14 +1,9 @@
 package com.macw.wwdoc.controller;
 
 
-import com.macw.wwdoc.entity.User;
-import com.macw.wwdoc.service.IUserService;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * <p>
@@ -16,19 +11,10 @@ import java.util.List;
  * </p>
  *
  * @author Macw
- * @since 2020-01-10
+ * @since 2020-01-14
  */
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
-    @Resource
-    private IUserService iUserService;
-
-    @RequestMapping("/test")
-    public void test(){
-        List<User> list = iUserService.list();
-        System.out.println(list);
-    }
 
 }

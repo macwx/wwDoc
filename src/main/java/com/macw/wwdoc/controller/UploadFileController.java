@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- * api文档附件 前端控制器
+ *  前端控制器
  * </p>
  *
  * @author Macw
- * @since 2020-01-10
+ * @since 2020-01-14
  */
 @RestController
 @RequestMapping("/upload-file")

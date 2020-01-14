@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author Macw
- * @since 2020-01-11
+ * @since 2020-01-14
  */
 @RestController
 @RequestMapping("/apidetail")

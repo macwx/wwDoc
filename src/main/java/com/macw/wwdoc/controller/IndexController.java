@@ -1,5 +1,6 @@
 package com.macw.wwdoc.controller;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,11 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
  * Copyright:    Copyright(C) 2019-2020
  * Company       Huerdai Henan LTD.
  */
-@RestController
+@Controller
 public class IndexController {
 
     @RequestMapping("/index")
     public String index(){
         return "doc/index";
+    }
+
+    @RequestMapping("/layuimini")
+    public String layuimini(){
+        return "views/index";
     }
 }

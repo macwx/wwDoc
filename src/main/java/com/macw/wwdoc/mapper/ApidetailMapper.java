@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author Macw
- * @since 2020-01-11
+ * @since 2020-01-14
  */
 public interface ApidetailMapper extends BaseMapper<Apidetail> {
 

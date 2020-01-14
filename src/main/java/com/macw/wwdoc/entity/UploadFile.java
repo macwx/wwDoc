@@ -11,11 +11,11 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * api文档附件
+ * 
  * </p>
  *
  * @author Macw
- * @since 2020-01-10
+ * @since 2020-01-14
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

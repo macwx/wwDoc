@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author Macw
- * @since 2020-01-11
+ * @since 2020-01-14
  */
 @Service
 public class ApidetailServiceImpl extends ServiceImpl<ApidetailMapper, Apidetail> implements IApidetailService {
