@@ -3,6 +3,8 @@ package com.macw.wwdoc.entity.vo;
 import lombok.Data;
 import org.apache.poi.ss.formula.functions.T;
 
+import java.util.List;
+
 /**
  * @author 马超伟
  * @PROJECT_NAME: wwdoc
@@ -17,12 +19,12 @@ import org.apache.poi.ss.formula.functions.T;
  * 首页菜单
  */
 @Data
-public class MenuVo<T> {
+public class MenuVo {
 
     private String title;
     private String icon;
     private String href;
     private String target;
-    private T child;
+    private List<MenuVo> child;
 
 }

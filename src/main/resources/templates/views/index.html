@@ -14,6 +14,7 @@
     <link rel="stylesheet" th:href="@{/layuimini/lib/layui-v2.5.5/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/layuimini/css/layuimini.css}" media="all">
     <link rel="stylesheet" th:href="@{/layuimini/lib/font-awesome-4.7.0/css/font-awesome.min.css}" media="all">
+    <base th:href="${#request.getContextPath()}+'/'">
     <!--[if lt IE 9]>
     <script th:src="@{https://cdn.staticfile.org/html5shiv/r29/html5.min.js}"></script>
     <script th:src="@{https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js}"></script>
@@ -110,6 +111,18 @@
             layer = layui.layer;
 
         layuimini.init('layuimini/api/init.json');
+
+        var url = "menu/index";
+        $.getJSON(url, function (data, status) {
+            console.log(data);
+            if (data == null) {
+                layuimini.msg_error('暂无菜单信息');
+            } else {
+                layuimini.initMenu(data.menuInfo);
+            }
+        }).fail(function () {
+            layuimini.msg_error('菜单接口有误');
+        });
 
         $('.login-out').on("click", function () {
             layer.msg('退出登录成功', function () {

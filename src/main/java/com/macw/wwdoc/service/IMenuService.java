@@ -2,6 +2,11 @@ package com.macw.wwdoc.service;
 
 import com.macw.wwdoc.entity.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.macw.wwdoc.entity.vo.MenuVo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -12,5 +17,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-01-14
  */
 public interface IMenuService extends IService<Menu> {
+
+    Map listMenuVo(Integer identify);
 
 }
