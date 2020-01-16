@@ -1,26 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <title>LayuiMini - 基于Layui的后台管理系统前端模板</title>
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta http-equiv="Access-Control-Allow-Origin" content="*">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="format-detection" content="telephone=no">
-    <link rel="icon" th:href="@{/layuimini/images/favicon.ico}">
-    <link rel="stylesheet" th:href="@{/layuimini/lib/layui-v2.5.5/css/layui.css}" media="all">
-    <link rel="stylesheet" th:href="@{/layuimini/css/layuimini.css}" media="all">
-    <link rel="stylesheet" th:href="@{/layuimini/lib/font-awesome-4.7.0/css/font-awesome.min.css}" media="all">
-    <base th:href="${#request.getContextPath()}+'/'">
-    <!--[if lt IE 9]>
-    <script th:src="@{https://cdn.staticfile.org/html5shiv/r29/html5.min.js}"></script>
-    <script th:src="@{https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js}"></script>
-    <![endif]-->
-    <style id="layuimini-bg-color">
-    </style>
+    <th:block th:include="views/include :: header('首页')"/>
 </head>
 <body class="layui-layout-body layuimini-all">
 <div class="layui-layout layui-layout-admin">
@@ -57,10 +38,12 @@
                 <a href="javascript:;">admin</a>
                 <dl class="layui-nav-child">
                     <dd>
-                        <a href="javascript:;" data-iframe-tab="page/user-setting.html" data-title="基本资料" data-icon="fa fa-gears">基本资料</a>
+                        <a href="javascript:;" data-iframe-tab="page/user-setting.html" data-title="基本资料"
+                           data-icon="fa fa-gears">基本资料</a>
                     </dd>
                     <dd>
-                        <a href="javascript:;" data-iframe-tab="page/user-password.html" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
+                        <a href="javascript:;" data-iframe-tab="page/user-password.html" data-title="修改密码"
+                           data-icon="fa fa-gears">修改密码</a>
                     </dd>
                     <dd>
                         <a href="javascript:;" class="login-out">退出登录</a>
@@ -87,8 +70,10 @@
                 <li class="layui-nav-item">
                     <a href="javascript:;"> <i class="fa fa-dot-circle-o"></i> 页面操作</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" data-page-close="other"><i class="fa fa-window-close"></i> 关闭其他</a></dd>
-                        <dd><a href="javascript:;" data-page-close="all"><i class="fa fa-window-close-o"></i> 关闭全部</a></dd>
+                        <dd><a href="javascript:;" data-page-close="other"><i class="fa fa-window-close"></i> 关闭其他</a>
+                        </dd>
+                        <dd><a href="javascript:;" data-page-close="all"><i class="fa fa-window-close-o"></i> 关闭全部</a>
+                        </dd>
                     </dl>
                 </li>
             </ul>
@@ -102,8 +87,7 @@
 </div>
 
 
-<script th:src="@{/layuimini/lib/layui-v2.5.5/layui.js?v=1.0.4}" charset="utf-8"></script>
-<script th:src="@{/layuimini/js/lay-config.js?v=1.0.4}" charset="utf-8"></script>
+
 <script>
     layui.use(['element', 'layer', 'layuimini'], function () {
         var $ = layui.jquery,

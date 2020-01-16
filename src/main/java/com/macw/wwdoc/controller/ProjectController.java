@@ -1,9 +1,15 @@
 package com.macw.wwdoc.controller;
 
 
+import com.macw.wwdoc.entity.Project;
+import com.macw.wwdoc.service.IProjectService;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +22,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/project")
 public class ProjectController {
+
+    @Resource
+    private IProjectService iProjectService;
+
+    @RequestMapping("/listProject")
+    public ModelAndView listProject(){
+        ModelAndView mv = new ModelAndView("views/project/projectList");
+        List<Project> projectList = iProjectService.list();
+        mv.addObject("projectList",projectList);
+        return mv;
+
+    }
 
 }

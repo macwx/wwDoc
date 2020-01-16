@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="views/include :: header('首页')"/>
+</head>
+
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    可提现金额
+                    <span class="layui-badge layui-bg-blue layuiadmin-badge">提现</span>
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+                    <p class="layuiadmin-big-font">￥${money}</p>
+                    <p>
+                        已提现金额
+                        <span class="layuiadmin-span-color">${totalMoney} <i
+                                class="layui-inline layui-icon layui-icon-flag"></i></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    用户总数
+                    <span class="layui-badge layui-bg-cyan layuiadmin-badge">推广</span>
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+                    <p class="layuiadmin-big-font">${totalCus}</p>
+                    <p>
+                        会员数
+                        <span class="layuiadmin-span-color">${totalCus1} <i
+                                class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    本月预估收入
+                    <span class="layui-badge layui-bg-green layuiadmin-badge">收入</span>
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+
+                    <p class="layuiadmin-big-font">￥${monthProfit}</p>
+                    <p>
+                        总收入
+                        <span class="layuiadmin-span-color">${totalProfit} <i
+                                class="layui-inline layui-icon layui-icon-dollar"></i></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    本月订单成交笔数
+                    <span class="layui-badge layui-bg-orange layuiadmin-badge">订单</span>
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+                    <p class="layuiadmin-big-font">${monthOrder}</p>
+                    <p>
+                        历史订单成交总数
+                        <span class="layuiadmin-span-color">${totalOrder} <i
+                                class="layui-inline layui-icon layui-icon-user"></i></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-sm12">
+        <div class="layui-card-body">
+            <div class="layui-row">
+                <div class="layui-input-inline" style="width: 800px">
+                    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                    <div id="main" style="width: 600px;height:400px;"></div>
+                </div>
+                <%-- <div class="layui-input-inline" style="width: 800px">
+                <div id="profit" style="width: 600px;height:400px;"></div>
+            </div>--%>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

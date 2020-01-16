@@ -139,7 +139,7 @@ webpackJsonp([0], [function(t, e, n) {
 		var n = "http://misc.xl9.xunlei.com/res/data/config.json";
 		t().then(function(t) {
 			t && t.download_link && e("download_link", t.download_link).then(function(t) {
-				t && t.xl9_download && a(".JS-btn-download").attr("href", 'javascript:;')
+				t && t.xl9_download
 			})
 		})
 	}
