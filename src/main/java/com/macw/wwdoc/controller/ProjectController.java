@@ -28,7 +28,7 @@ public class ProjectController {
 
     @RequestMapping("/listProject")
     public ModelAndView listProject(){
-        ModelAndView mv = new ModelAndView("views/project/projectList");
+        ModelAndView mv = new ModelAndView("views/project/project");
         List<Project> projectList = iProjectService.list();
         mv.addObject("projectList",projectList);
         return mv;
