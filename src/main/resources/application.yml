@@ -51,3 +51,7 @@ mybatis-plus:
   typeAliasesPackage: com.macw.wwdoc.entity
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
   mapperLocations: classpath*:mybatis/mapper/*Mapper.xml
+
+
+logging:
+  config: classpath:logback.xml

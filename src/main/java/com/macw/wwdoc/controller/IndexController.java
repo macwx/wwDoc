@@ -3,6 +3,7 @@ package com.macw.wwdoc.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author 马超伟
@@ -14,15 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
  * Company       Huerdai Henan LTD.
  */
 @Controller
-public class IndexController {
+public class IndexController  extends BaseControler {
 
-    @RequestMapping("/index")
-    public String index(){
-        return "doc/index";
+    @RequestMapping({"/","/index",""})
+    public ModelAndView index(){
+//        return "doc/index";
+        return new ModelAndView(thyme + "/user/login");
     }
 
     @RequestMapping("/layuimini")
-    public String layuimini(){
-        return "views/index";
+    public ModelAndView layuimini(){
+        return new ModelAndView("views/index");
     }
 }

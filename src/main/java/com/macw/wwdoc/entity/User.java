@@ -1,5 +1,7 @@
 package com.macw.wwdoc.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
 import java.io.Serializable;
@@ -26,6 +28,7 @@ public class User implements Serializable {
     /**
      * 用户主键id
      */
+    @TableId(value = "user_id",type = IdType.AUTO)
     private Integer userId;
 
     /**

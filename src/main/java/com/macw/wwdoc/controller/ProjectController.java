@@ -21,18 +21,19 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/project")
-public class ProjectController {
+public class ProjectController extends BaseControler{
 
     @Resource
     private IProjectService iProjectService;
 
     @RequestMapping("/listProject")
     public ModelAndView listProject(){
-        ModelAndView mv = new ModelAndView("views/project/project");
+        ModelAndView mv = new ModelAndView(thyme+"/project/projectList");
         List<Project> projectList = iProjectService.list();
         mv.addObject("projectList",projectList);
         return mv;
-
     }
+
+//    public
 
 }
