@@ -51,6 +51,11 @@ mybatis-plus:
   typeAliasesPackage: com.macw.wwdoc.entity
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
   mapperLocations: classpath*:mybatis/mapper/*Mapper.xml
+  global-config:
+    db-config:
+      logic-delete-field: isDel  #全局逻辑删除字段值
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
 
 
 logging:

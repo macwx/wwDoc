@@ -1,94 +1,101 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="views/include :: header('首页')"/>
+    <th:block th:include="views/include :: header('项目列表')"/>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link th:href="@{/assets/css/plugins/sweetalert/sweetalert.css}" rel="stylesheet">
+    <style>
+        .top-panel {
+            border: 1px solid #eceff9;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .top-panel > .layui-card-body {
+            height: 60px;
+        }
+
+
+        .top-panel-number {
+            line-height: 60px;
+            font-size: 30px;
+            border-right: 1px solid #eceff9;
+        }
+
+        .top-panel-tips {
+            line-height: 30px;
+            font-size: 12px
+        }
+    </style>
 </head>
-
 <body>
-<div class="layui-fluid">
+<!--<div class="layuimini-container">-->
+<div class="layuimini-main">
+
     <div class="layui-row layui-col-space15">
-        <div class="layui-col-sm6 layui-col-md3">
-            <div class="layui-card">
-                <div class="layui-card-header">
-                    可提现金额
-                    <span class="layui-badge layui-bg-blue layuiadmin-badge">提现</span>
+        <div th:each="project,projectList : ${projectList}" class="layui-col-xs12 layui-col-md3">
+            <div class="layui-card top-panel">
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space5">
+                        <div th:text="${project.proName}" class="layui-col-xs9 layui-col-md9 top-panel-number"></div>
+                        <div class="layui-col-xs3 layui-col-md3 top-panel-tips">
+                            <a href="/project/info/{{.Id}}" class="layui-btn layui-btn-xs layui-btn-radius">
+                                项目设置</a><br>
+
+                            <a href="/project/env/{{.Id}}"
+                               class="layui-btn layui-btn-xs layui-btn-radius layui-btn-normal"> 团队成员</a><br>
+                         <!--   <a href="/project/info/{{.Id}}" class="layui-btn layui-btn-danger layui-btn-xs layui-btn-radius">删除项目</a><br>-->
+                        </div>
+                    </div>
                 </div>
-                <div class="layui-card-body layuiadmin-card-list">
-                    <p class="layuiadmin-big-font">￥${money}</p>
-                    <p>
-                        已提现金额
-                        <span class="layuiadmin-span-color">${totalMoney} <i
-                                class="layui-inline layui-icon layui-icon-flag"></i></span>
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="layui-col-sm6 layui-col-md3">
-            <div class="layui-card">
-                <div class="layui-card-header">
-                    用户总数
-                    <span class="layui-badge layui-bg-cyan layuiadmin-badge">推广</span>
-                </div>
-                <div class="layui-card-body layuiadmin-card-list">
-                    <p class="layuiadmin-big-font">${totalCus}</p>
-                    <p>
-                        会员数
-                        <span class="layuiadmin-span-color">${totalCus1} <i
-                                class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>
-                    </p>
-                </div>
+                <div th:text="${project.despection}" class="layui-card-header"></div>
             </div>
         </div>
 
-        <div class="layui-col-sm6 layui-col-md3">
-            <div class="layui-card">
-                <div class="layui-card-header">
-                    本月预估收入
-                    <span class="layui-badge layui-bg-green layuiadmin-badge">收入</span>
+        <div class="layui-col-xs12 layui-col-md3"  id="add">
+                <div class="layui-card top-panel">
+                    <div class="layui-card-body">
+                        <div class="icon">
+                            <i class="img-responsive fa fa-plus" style="font-size: 90px;color: #dadada;"></i>
+                        </div>
+                    </div>
+                    <div class="layui-card-header">新增项目</div>
                 </div>
-                <div class="layui-card-body layuiadmin-card-list">
+        </div>
 
-                    <p class="layuiadmin-big-font">￥${monthProfit}</p>
-                    <p>
-                        总收入
-                        <span class="layuiadmin-span-color">${totalProfit} <i
-                                class="layui-inline layui-icon layui-icon-dollar"></i></span>
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="layui-col-sm6 layui-col-md3">
-            <div class="layui-card">
-                <div class="layui-card-header">
-                    本月订单成交笔数
-                    <span class="layui-badge layui-bg-orange layuiadmin-badge">订单</span>
-                </div>
-                <div class="layui-card-body layuiadmin-card-list">
-                    <p class="layuiadmin-big-font">${monthOrder}</p>
-                    <p>
-                        历史订单成交总数
-                        <span class="layuiadmin-span-color">${totalOrder} <i
-                                class="layui-inline layui-icon layui-icon-user"></i></span>
-                    </p>
-                </div>
-            </div>
-        </div>
     </div>
-    <div class="layui-col-sm12">
-        <div class="layui-card-body">
-            <div class="layui-row">
-                <div class="layui-input-inline" style="width: 800px">
-                    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-                    <div id="main" style="width: 600px;height:400px;"></div>
-                </div>
-                <%-- <div class="layui-input-inline" style="width: 800px">
-                <div id="profit" style="width: 600px;height:400px;"></div>
-            </div>--%>
-            </div>
-        </div>
-    </div>
+
+
 </div>
+<!--</div>-->
+<script>
+    layui.use(['layer', 'echarts'], function () {
+        var $ = layui.jquery,
+            layer = layui.layer,
+            echarts = layui.echarts;
 
+        $("#add").click(function () {
+            layer.open({
+                title: "添加项目",
+                content: "/project/toEdit",
+                type: 2,
+                maxmin: true,
+                area: ['690px', '700px'],
+                maxmin: true,
+                end: function () {
+                    window.location.reload();
+                }
+            });
+        })
+
+    });
+
+
+
+</script>
 
 </body>
 </html>

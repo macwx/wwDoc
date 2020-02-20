@@ -1,9 +1,12 @@
 package com.macw.wwdoc.entity;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -46,9 +49,45 @@ public class Project implements Serializable {
     private String password;
 
     /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 创建人id
+     */
+    private Integer createId;
+
+    /**
+     * 创建人
+     */
+    private String createUser;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
+
+    /**
+     * 更新人id
+     */
+    private Integer updateId;
+
+    /**
+     * 更新人
+     */
+    private String updateUser;
+
+    /**
      * 0可用，1已删除
      */
+    @TableLogic
     private Integer isDel;
+
+    /**
+     * 是否公开，0私密，1公开
+     */
+    private Integer isPub;
 
 
 }

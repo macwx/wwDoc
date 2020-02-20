@@ -34,19 +34,21 @@ public class ShiroConfig {
          * anon ,代表匿名可访问，
          * authc ,认证后才可访问
          */
-    /*    map.put("/api/**", "anon");
-        map.put("/user/login", "anon");
-        map.put("/layuiadmin/**", "anon");
+        map.put("/user/**", "anon");
+        map.put("/layuimini/**", "anon");
         map.put("/js/**", "anon");
-        map.put("/ui/**", "anon");
+        map.put("/css/**", "anon");
+        map.put("/img/**", "anon");
+        map.put("/assets/**", "anon");
+
         map.put("/logout", "logout");
 
-        map.put("/**", "authc");*/
+        map.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         //设置安全管理器
         shiroFilterFactoryBean.setSecurityManager(defaultSecurityManager);
 
-        shiroFilterFactoryBean.setLoginUrl("/views/login.jsp");
+        shiroFilterFactoryBean.setLoginUrl("/user/toLogin");
         return shiroFilterFactoryBean;
 
     }
