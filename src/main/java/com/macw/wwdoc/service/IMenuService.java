@@ -18,6 +18,6 @@ import java.util.Map;
  */
 public interface IMenuService extends IService<Menu> {
 
-    Map listMenuVo(Integer identify);
+    MenuVo listMenuVo(Integer identify,String title,String icon);
 
 }

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="views/include :: header('编辑分类信息')"/>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">分类名称</label>
+
+                <div class="layui-input-block">
+                    <div th:switch="${category != null }">
+                        <div th:case="true">
+                            <input type="text" th:name="categoryName" th:value="${category.categoryName}"
+                                   lay-verify="required" lay-reqtext="分类名称不能为空" placeholder="请输入分类名称"
+                                   class="layui-input">
+                            <input th:id="cids" type="hidden" th:value="${category.categoryId}">
+                            <input  type="hidden" th:field="${category.categoryId}">
+                        </div>
+                        <div th:case="false">
+                            <input type="text" th:name="categoryName"
+                                   lay-verify="required" lay-reqtext="分类名称不能为空" placeholder="请输入分类名称"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">排序号</label>
+                <div class="layui-input-block">
+                    <div th:switch="${category != null }">
+                        <div th:case="true"><input type="text" th:name="sort" th:value="${category.sort}"
+                                                   lay-verify="required|number"
+                                                   lay-reqtext="排序号不能为空" placeholder="请输入排序号，例如：99" class="layui-input">
+                        </div>
+                        <div th:case="false"><input type="text" th:name="sort" lay-verify="required|number"
+                                                    lay-reqtext="排序号不能为空" placeholder="请输入排序号，例如：99"
+                                                    class="layui-input">
+                        </div>
+                        <tip style="color: red">*序号越大越靠前</tip>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${categoryId != null}">
+                <input th:id="parentIds" type="hidden" th:value="${categoryId}">
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form', 'layuimini'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.jquery,
+            layuimini = layui.layuimini;
+
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            console.log(data);
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            var parentIds = 0;
+            if ($("#parentIds").val() != null) {
+                parentIds = $("#parentIds").val();
+            }
+            var urls = "/category/addCategory?parentIds=" + parentIds;
+            if ($("#cids").val() != null) {
+                var cids = $("#cids").val();
+                urls = "/category/addCategory?cids=" + cids;
+            }
+            $.ajax({
+                url: urls,
+                data: data.field,
+                type: "post",
+                //4.接收后台修改响应回来的数据；关闭弹出层、提示修改信息、刷新table
+                success: function (data) {
+                    if (data.code == 0) {
+                        layer.msg(data.msg, {
+                            offset: '15px',
+                            icon: 6,
+                            time: 1000
+                        }, function () {
+                            parent.layer.close(index);
+                            parent.location.reload();
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 2000
+                        });
+                    }
+
+                    //确认框关闭掉
+                    layer.close(index);
+                }
+            });
+            return false;//阻止跳转；
+        });
+
+    });
+</script>
+</body>
+</html>

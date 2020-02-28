@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -59,6 +61,37 @@ public class Category implements Serializable {
      * 路径地址
      */
     private String url;
+
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 创建人id
+     */
+    private Integer createId;
+
+    /**
+     * 创建人
+     */
+    private String createUser;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
+
+    /**
+     * 更新人id
+     */
+    private Integer updateId;
+
+    /**
+     * 更新人
+     */
+    private String updateUser;
 
 
 }

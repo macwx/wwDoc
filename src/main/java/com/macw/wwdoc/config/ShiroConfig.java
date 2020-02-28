@@ -29,7 +29,7 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean getShiroFilterFactoryBean(DefaultSecurityManager defaultSecurityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         //过滤器链，过滤拦截规则，
-        Map<String,String> map = new HashMap<>();
+        Map<String,String> map = new HashMap<>(16);
         /**
          * anon ,代表匿名可访问，
          * authc ,认证后才可访问

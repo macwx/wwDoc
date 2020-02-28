@@ -12,17 +12,11 @@
         <a>
             <div class="layuimini-tool"><i title="展开" class="fa fa-outdent" data-side-fold="1"></i></div>
         </a>
-
-        <ul class="layui-nav layui-layout-left layui-header-menu layui-header-pc-menu mobile layui-hide-xs">
-        </ul>
-        <ul class="layui-nav layui-layout-left layui-header-menu mobile layui-hide-sm">
+        <ul class="layui-nav layui-layout-left layui-header-menu ">
             <li class="layui-nav-item">
-                <a href="javascript:;"><i class="fa fa-list-ul"></i> 选择模块</a>
-                <dl class="layui-nav-child layui-header-mini-menu">
-                </dl>
+                <a href="/layuimini"><i class="fa fa-undo"></i> 返回项目列表</a>
             </li>
         </ul>
-
         <ul class="layui-nav layui-layout-right">
 
             <li class="layui-nav-item" lay-unselect>
@@ -35,7 +29,9 @@
                 <a href="javascript:;" data-check-screen="full"><i class="fa fa-arrows-alt"></i></a>
             </li>
             <li class="layui-nav-item layuimini-setting">
-                <a href="javascript:;" ><div th:text="${user.nickname}"></div></a>
+                <a href="javascript:;">
+                    <div th:text="${user.nickname}"></div>
+                </a>
                 <dl class="layui-nav-child">
                     <dd>
                         <a href="javascript:;" data-iframe-tab="page/user-setting.html" data-title="基本资料"
@@ -87,7 +83,6 @@
 </div>
 
 
-
 <script>
     layui.use(['element', 'layer', 'layuimini'], function () {
         var $ = layui.jquery,
@@ -96,7 +91,7 @@
 
         layuimini.init('layuimini/api/init.json');
 
-        var url = "menu/index";
+        var url = "menu/doc";
         $.getJSON(url, function (data, status) {
             console.log(data);
             if (data == null) {
@@ -111,37 +106,6 @@
         $('.login-out').on("click", function () {
             layer.msg('退出登录成功', function () {
                 window.location = '/page/login-1.html';
-            });
-            layer.confirm('确定要退出当前登录用户？', function(index){
-                $.ajax({
-                    url:'/category/deleteCategory',
-                    data: {"categoryId":data.categoryId},
-                    type: 'post',
-                    dataType: 'json',
-                    success:function(data){
-                        if (data.code==0){
-                            layer.msg(data.msg, {
-                                offset: '15px',
-                                icon: 6,
-                                time: 1000
-                            }, function(){
-                                parent.layer.close(index);
-                                parent.location.reload();
-                            });
-                        }else {
-                            layer.msg(data.msg, {
-                                icon: 5,
-                                time: 2000
-                            });
-                        }
-
-                        //确认框关闭掉
-                        layer.close(index);
-                    },error:function(data){
-                        layer.msg("操作失败", {time: 1000, icon:5});
-                    }
-                });
-                layer.close(index);
             });
         });
     });

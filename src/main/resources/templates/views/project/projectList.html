@@ -18,7 +18,6 @@
             height: 60px;
         }
 
-
         .top-panel-number {
             line-height: 60px;
             font-size: 30px;
@@ -36,34 +35,50 @@
 <div class="layuimini-main">
 
     <div class="layui-row layui-col-space15">
-        <div th:each="project,projectList : ${projectList}" class="layui-col-xs12 layui-col-md3">
+        <div th:each="project : ${projectList}" class="layui-col-xs12 layui-col-md3">
             <div class="layui-card top-panel">
                 <div class="layui-card-body">
                     <div class="layui-row layui-col-space5">
-                        <div th:text="${project.proName}" class="layui-col-xs9 layui-col-md9 top-panel-number"></div>
-                        <div class="layui-col-xs3 layui-col-md3 top-panel-tips">
-                            <a href="/project/info/{{.Id}}" class="layui-btn layui-btn-xs layui-btn-radius">
-                                项目设置</a><br>
+                        <div class="layui-col-xs9 layui-col-md9 top-panel-number">
+                            <button style="border: none;background-color: transparent;"
+                                    th:onclick="'javascript:sss('+${project.proId}+');'">
+                                <a>
+                                    <div th:text="${project.proName}"></div>
+                                </a>
+                            </button>
 
-                            <a href="/project/env/{{.Id}}"
-                               class="layui-btn layui-btn-xs layui-btn-radius layui-btn-normal"> 团队成员</a><br>
-                         <!--   <a href="/project/info/{{.Id}}" class="layui-btn layui-btn-danger layui-btn-xs layui-btn-radius">删除项目</a><br>-->
+                        </div>
+                        <div class="layui-col-xs3 layui-col-md3 top-panel-tips">
+                            <button data-type="pro_set" class="layui-btn layui-btn-xs layui-btn-radius">项目设置</button>
+                            <input type="hidden" th:value="${project.proId}">
+                            <br>
+                            <!--th:onclick="'javascript:sss('+${project.proId}+');'"-->
+                            <button data-type="num_set"
+                                    class="layui-btn layui-btn-xs layui-btn-radius layui-btn-normal"> 团队成员
+                            </button>
+                            <br>
                         </div>
                     </div>
                 </div>
-                <div th:text="${project.despection}" class="layui-card-header"></div>
+                <div class="layui-card-header">
+                    <span th:if="${project.isPub eq 0}">
+                        <span class="layui-col-md11" th:text="${project.despection}"></span>
+                        <span class=" layui-icon layui-icon-password"></span>
+                    </span>
+                    <span th:if="${project.isPub eq 1}" th:text="${project.despection}"></span>
+                </div>
             </div>
         </div>
 
-        <div class="layui-col-xs12 layui-col-md3"  id="add">
-                <div class="layui-card top-panel">
-                    <div class="layui-card-body">
-                        <div class="icon">
-                            <i class="img-responsive fa fa-plus" style="font-size: 90px;color: #dadada;"></i>
-                        </div>
+        <div class="layui-col-xs12 layui-col-md3" id="add">
+            <div class="layui-card top-panel">
+                <div class="layui-card-body">
+                    <div class="icon">
+                        <i class="img-responsive fa fa-plus" style="font-size: 90px;color: #dadada;"></i>
                     </div>
-                    <div class="layui-card-header">新增项目</div>
                 </div>
+                <div class="layui-card-header">新增项目</div>
+            </div>
         </div>
 
     </div>
@@ -72,6 +87,10 @@
 </div>
 <!--</div>-->
 <script>
+    function sss(data) {
+        top.location = "/project/toDocs?proId=" + data;
+    }
+
     layui.use(['layer', 'echarts'], function () {
         var $ = layui.jquery,
             layer = layui.layer,
@@ -80,22 +99,58 @@
         $("#add").click(function () {
             layer.open({
                 title: "添加项目",
-                content: "/project/toEdit",
+                content: "/project/toAdd",
                 type: 2,
                 maxmin: true,
-                area: ['690px', '700px'],
+                area: ['690px', '500px'],
                 maxmin: true,
                 end: function () {
                     window.location.reload();
                 }
             });
-        })
+        });
+
+        var active = {
+            pro_set: function () {
+                var ss = $(this).next().val();
+                layer.open({
+                    title: "项目设置",
+                    content: "/project/toEdit?proId=" + ss,
+                    type: 2,
+                    maxmin: true,
+                    area: ['690px', '500px'],
+                    maxmin: true,
+                    end: function () {
+                        window.location.reload();
+                    }
+                });
+            },
+            pro_name: function () {
+                var ss = $(this).next().val();
+                window.location = "/project/toDocs?proId=" + ss;
+            },
+            num_set: function () {
+                layer.open({
+                    title: "团队成员",
+                    content: "/project/toEdit",
+                    type: 2,
+                    maxmin: true,
+                    area: ['690px', '500px'],
+                    maxmin: true,
+                    end: function () {
+                        window.location.reload();
+                    }
+                });
+            }
+        };
+
+        $('.layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
 
     });
 
-
-
 </script>
-
 </body>
 </html>

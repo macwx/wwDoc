@@ -1,5 +1,6 @@
 package com.macw.wwdoc.controller;
 
+import com.macw.wwdoc.entity.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,9 @@ public class IndexController  extends BaseControler {
 
     @RequestMapping("/layuimini")
     public ModelAndView layuimini(){
-        return new ModelAndView("views/index");
+        ModelAndView mv = new ModelAndView(thyme+"/index");
+        User user = getUser();
+        mv.addObject("user",user);
+        return mv;
     }
 }

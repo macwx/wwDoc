@@ -28,7 +28,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
 
     @Override
-    public Map listMenuVo(Integer identify) {
+    public MenuVo listMenuVo(Integer identify,String title,String icon) {
         List<MenuVo> menuVos = menuMapper.listMenuVo(identify);
         for (MenuVo menuVo : menuVos) {
             if (menuVo.getChild()!=null) {
@@ -41,12 +41,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             }
             menuVo.setTarget("_self");
         }
-        Map<String,Object> map = new HashMap<>();
         MenuVo menuVo = new MenuVo();
-        menuVo.setTitle("控制台");
-        menuVo.setIcon("fa fa-home");
+        menuVo.setTitle(title);
+        menuVo.setIcon(icon);
+        menuVo.setHref("http://www.baidu.com");
+        menuVo.setTarget("_self");
         menuVo.setChild(menuVos);
-        map.put("control", menuVo);
-        return map;
+
+        return menuVo;
     }
 }

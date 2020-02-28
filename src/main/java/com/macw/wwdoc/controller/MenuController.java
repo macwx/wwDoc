@@ -36,10 +36,22 @@ public class MenuController {
     private IMenuService iMenuService;
 
     @RequestMapping("/index")
-    public Map index(Integer identify){
-        Map listMenuVoMap = iMenuService.listMenuVo(1);
+    public Map index(){
+        MenuVo menuVo = iMenuService.listMenuVo(1,"控制台","fa fa-home");
         Map<String,Object> map = new HashMap<>();
-        map.put("menuInfo",listMenuVoMap);
+        Map<String,Object> map2 = new HashMap<>();
+        map2.put("control", menuVo);
+        map.put("menuInfo",map2);
+        return map;
+    }
+
+    @RequestMapping("/doc")
+    public Map doc(Integer identify){
+        Map<String,Object> map = new HashMap<>();
+        MenuVo menuVo2 = iMenuService.listMenuVo(2,"返回项目列表","fa fa-undo");
+        Map<String,Object> map2 = new HashMap<>(16);
+        map2.put("docs", menuVo2);
+        map.put("menuInfo",map2);
         return map;
     }
 }

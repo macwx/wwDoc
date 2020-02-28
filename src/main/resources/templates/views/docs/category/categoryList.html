@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="views/include :: header('分类信息')"/>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div style="padding-bottom: 10px;" id="LAY_lay_add">
+            <button class="layui-btn layuiadmin-btn-role " data-type="add" id="add">
+                <i class="layui-icon layui-icon-add-circle-fine"></i> 添加分类
+            </button>
+            <div class="layui-input-inline" style="width: 200px;">
+                <input type="text" name="search" id="Lay_toSearch_input" placeholder="请输入分类名称" autocomplete="off"
+                       class="layui-input">
+            </div>
+            <div class="layui-input-inline" style="width: 100px;">
+                <button type="button" class="layui-btn layui-btn-normal" id="btn-search">
+                    <i class="layui-icon layui-icon-search"></i> 搜索
+                </button>
+            </div>
+            <div class="layui-btn-group">
+                <button class="layui-btn" id="btn-expand"> <i class="fa fa-arrows-h"></i>&nbsp;全部展开</button>
+                <button class="layui-btn" id="btn-fold"><i class="fa fa-arrows-v"></i>&nbsp;全部折叠</button>
+                <button class="layui-btn" id="btn-refresh"><i class="fa fa-repeat"></i>&nbsp;刷新表格</button>
+            </div>
+            <table id="munu-table" class="layui-table" lay-filter="munu-table"></table>
+        </div>
+    </div>
+</div>
+<!-- 操作列 -->
+<script type="text/html" id="auth-state">
+    <a class="layui-btn  layui-btn-sm" lay-event="edit"><i class="layui-icon">&#xe642;</i>修改</a>
+    <a class="layui-btn layui-btn-danger  layui-btn-sm" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+
+<script>
+    layui.use(['table', 'treetable'], function () {
+        var $ = layui.jquery;
+        var table = layui.table;
+        var treetable = layui.treetable;
+
+        // 渲染表格
+        // 渲染表格
+        var renderTable = function () {
+            layer.load(2);
+            treetable.render({
+                elem: '#munu-table',
+                url: '/category/listCategory',
+                treeColIndex: 1,    // 树形图标显示在第几列
+                treeSpid: 0,     // 最上级的父级id
+                treeIdName: 'categoryId',   // 	id字段的名称
+                treePidName: 'parentId',  // 	pid字段的名称
+                treeDefaultClose: true,     //是否默认折叠
+                page: false,
+                cols: [
+                    [
+                        {type: 'numbers'},
+                        {field: 'categoryName', minWidth: 200, align: "left", title: '分类名称'},
+                        {field: 'sort', width: 80, align: 'center', title: '排序号'},
+                        {
+                            field: 'createUser', align: 'center', title: '最后创建/更新人',
+                            templet: function (d) {
+                                if (d.updateUser != null) {
+                                    return d.updateUser;
+                                } else {
+                                    return d.createUser;
+                                }
+                            }
+                        },
+                        {
+                            field: 'createTime', title: '创建/更新时间', align: "center",
+                            templet: function (d) {
+                                if (d.createTime != null) {
+                                    return layui.util.toDateString(d.createTime);
+                                }
+                                return '';
+                            }
+                        },
+                        {
+                            title: "创建子分类", align: "center",
+                            templet: function (d) {
+                                return '<button type="button" class="layui-btn layui-btn-normal  layui-btn-sm  "  lay-event="yn"> <i class="layui-icon">&#xe624;</i>创建子分类</button>';
+                            }
+                        },
+                        {templet: '#auth-state', align: 'center', title: '操作'}
+                    ]
+                ],
+                done: function () {
+                    layer.closeAll('loading');
+                }
+            });
+
+        }
+        renderTable();
+        //展开所有
+        $('#btn-expand').click(function () {
+            treetable.expandAll('#munu-table');
+        });
+        //折叠所有
+        $('#btn-fold').click(function () {
+            treetable.foldAll('#munu-table');
+        });
+
+        //刷新表格
+        $('#btn-refresh').click(function () {
+            renderTable();
+        });
+
+        //监听工具条
+        table.on('tool(munu-table)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'del') {
+                layer.confirm('\n' +
+                    '确认删除目录吗？此操作会把该目录下的所有页面一并删除，请谨慎操作!', function(index){
+                    $.ajax({
+                        url:'/category/deleteCategory',
+                        data: {"categoryId":data.categoryId},
+                        type: 'post',
+                        dataType: 'json',
+                        success:function(data){
+                            if (data.code==0){
+                                layer.msg(data.msg, {
+                                    offset: '15px',
+                                    icon: 6,
+                                    time: 1000
+                                }, function(){
+                                    parent.layer.close(index);
+                                    parent.location.reload();
+                                });
+                            }else {
+                                layer.msg(data.msg, {
+                                    icon: 5,
+                                    time: 2000
+                                });
+                            }
+
+                            //确认框关闭掉
+                            layer.close(index);
+                        },error:function(data){
+                            layer.msg("操作失败", {time: 1000, icon:5});
+                        }
+                    });
+                    layer.close(index);
+                });
+            } else if (layEvent === 'edit') {
+                layer.open({
+                    title: "编辑分类信息",
+                    content: "/category/toAddCategory?editId="+data.categoryId,
+                    type: 2,
+                    maxmin: true,
+                    area: ['590px', '400px'],
+                    maxmin: true,
+                    end: function () {
+                        window.location.reload();
+                    }
+                });
+
+            } else if (layEvent === 'yn'){
+                layer.open({
+                    title: "添加子分类",
+                    content: "/category/toAddCategory?categoryId="+data.categoryId,
+                    type: 2,
+                    maxmin: true,
+                    area: ['590px', '400px'],
+                    maxmin: true,
+                    end: function () {
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+
+        //执行搜索
+        $('#btn-search').click(function () {
+            var keyword = $('#Lay_toSearch_input').val();
+            //alert(keyword);
+            // var searchName = $('#Lay_toSearch_input').val();
+            var searchCount = 0;
+            $('#munu-table').next('.treeTable').find('.layui-table-body tbody tr td').each(function () {
+                $(this).css('background-color', 'transparent');
+                var text = $(this).text();
+                if (keyword != '' && text.indexOf(keyword) >= 0) {
+                    $(this).css('background-color', 'rgba(250,230,160,0.5)');
+                    if (searchCount == 0) {
+                        //展开所有
+                        treetable.expandAll('#munu-table');
+                        $('html,body').stop(true);
+                        $('html,body').animate({scrollTop: $(this).offset().top - 150}, 500);
+                    }
+                    searchCount++;
+                }
+            });
+            if (keyword == '') {
+                layer.msg("请输入搜索内容", {icon: 5});
+            } else if (searchCount == 0) {
+                layer.msg("没有匹配结果", {icon: 5});
+            }
+        });
+
+        var active = {
+            add: function () {
+                layer.open({
+                    title: "添加分类",
+                    content: "/category/toAddCategory",
+                    type: 2,
+                    maxmin: true,
+                    area: ['690px', '500px'],
+                    maxmin: true,
+                    end: function () {
+                        window.location.reload();
+                    }
+                });
+            }
+
+        };
+
+
+        $('.layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+    });
+</script>
+</body>
+</html>

@@ -27,6 +27,8 @@ public class Constant {
 
 
     public static final String LOGIN_USER = "LOGIN_USER";
+
+    public static final String PRO_ID = "PRO_ID";
     public static final String LOGIN_FAIL = "未找到登陆用户信息";
 
     public static final String PASSWORD_FAIL = "密码与原密码不匹配";

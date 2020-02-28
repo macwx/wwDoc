@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <th:block th:include="views/include :: header('项目设置')"/>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <style>
+        .layui-form-item layui-input-block {
+            width: auto;
+            padding-right: 10px;
+            line-height: 38px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-tab layui-tab-card">
+    <ul class="layui-tab-title">
+        <li class="layui-this">基本设置</li>
+        <li>高级设置</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <div class="layuimini-container">
+                <div class="layuimini-main">
+                    <div class="layui-form layuimini-form" th:object="${project}">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">项目名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" th:field="*{proName}" lay-verify="required" lay-reqtext="项目名称不能为空"
+                                       placeholder="请输入项目名称" class="layui-input">
+                            </div>
+                        </div>
+                        <input type="hidden"  th:field="*{proId}">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">项目描述</label>
+                            <div class="layui-input-block">
+                                <textarea th:field="*{despection}" class="layui-textarea"
+                                          placeholder="请输入描述信息"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">项目类型</label>
+                            <div class="layui-input-block">
+                                <input type="radio" th:field="*{isPub}" lay-filter="sm" value="1" title="公开项目">
+                                <input type="radio" th:field="*{isPub}" lay-filter="sm" value="0" title="私密项目">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text" id="pwd">
+                            <label class="layui-form-label">访问密码</label>
+                            <div class="layui-input-block">
+                                <input type="text" th:field="${project.password}" th:value="${project.password}"
+                                       placeholder="请输入访问密码" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="saveBtn">确认保存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-tab-item">
+            <div style="text-align: center">
+                <div style="width: 100%;height: 60px;padding-top: 70px">
+                    <button id="hover" type="button" class="layui-btn " style="width:200px" >转让</button>
+                </div>
+                <div style="width: 100%;height: 60px">
+                    <button type="button" style="width:200px" class="layui-btn layui-btn-disabled" >归档</button>
+                </div>
+
+                <div style="width: 100%;height: 60px">
+                    <button type="button" id="del" style="width:200px" class="layui-btn layui-btn-danger">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    layui.use(['form', 'layuimini', 'element'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.jquery,
+            element = layui.element,
+            layuimini = layui.layuimini;
+
+        if ($('#isPub1').is(':checked')) {
+            $("#pwd").hide();
+        }
+
+        var tipsi;
+        $("#hover").hover(function(){
+            tipsi = layer.tips('你可以将该项目转让给他人',this,{time:0});
+        },function(){
+            layer.close(tipsi);
+        });
+
+        form.on('radio(sm)', function (data) {
+            // console.log(data.elem); //得到radio原始DOM对象
+            // console.log(data.value); //被点击的radio的value值
+            if (data.value == 0) {
+                $("#pwd").show();
+            }
+            if (data.value == 1) {
+                $("#pwd").hide();
+            }
+        });
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            console.log(data);
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            $.ajax({
+                url: "/project/addOrUpdate",
+                data: data.field,
+                type: "post",
+                //4.接收后台修改响应回来的数据；关闭弹出层、提示修改信息、刷新table
+                success: function (data) {
+                    if (data.code == 0) {
+                        layer.msg(data.msg, {
+                            offset: '15px',
+                            icon: 6,
+                            time: 2000
+                        }, function () {
+                            parent.layer.close(index);
+                            parent.location.reload();
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 2000
+                        });
+                    }
+
+                    //确认框关闭掉
+                    layer.close(index);
+                }
+            });
+            return false;//阻止跳转；
+        });
+
+        $("#del").click(function () {
+            layer.confirm('确定要删除这个项目吗?', function(index){
+                var ss =  $("#proId").val();
+                $.ajax({
+                    url:'/project/deleteOne',
+                    data: {"proId":ss},
+                    type: 'post',
+                    dataType: 'json',
+                    success:function(data){
+                        if (data.code==0){
+                            layer.msg(data.msg, {
+                                offset: '15px',
+                                icon: 6,
+                                time: 1000
+                            }, function(){
+                                parent.layer.close(index);
+                                parent.location.reload();
+                            });
+                        }else {
+                            layer.msg(data.msg, {
+                                icon: 5,
+                                time: 2000
+                            });
+                        }
+
+                        //确认框关闭掉
+                        layer.close(index);
+                    },error:function(data){
+                        layer.msg("操作失败", {time: 1000, icon:5});
+                    }
+                });
+                layer.close(index);
+            });
+        })
+
+    });
+</script>
+</body>
+</html>

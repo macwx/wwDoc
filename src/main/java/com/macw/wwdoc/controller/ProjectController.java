@@ -44,17 +44,24 @@ public class ProjectController extends BaseControler{
         return mv;
     }
 
-    @RequestMapping("/toEdit")
-    public ModelAndView toEdit(){
-        return new ModelAndView(thyme+"/project/projectEdit");
+    @RequestMapping("/toAdd")
+    public ModelAndView toAdd(){
+        return new ModelAndView(thyme+"/project/addProject");
     }
+
+    @RequestMapping("/toEdit")
+    public ModelAndView toEdit(Integer proId){
+        logger.debug("----------------------------- "+proId);
+        ModelAndView mv = new ModelAndView(thyme + "/project/projectSetting");
+        Project project = iProjectService.getById(proId);
+        mv.addObject("project",project);
+        return mv;
+    }
+
 
     @RequestMapping("/addOrUpdate")
     public ResultUtil addOrUpdate(Project project){
-        logger.debug("///////... "+project);
         User user = getUser();
-
-        boolean save = iProjectService.save(project);
         if (IntegerUtils.isBlank(project.getProId())){
             project.setCreateId(user.getUserId());
             project.setCreateUser(user.getUserName());
@@ -64,11 +71,33 @@ public class ProjectController extends BaseControler{
             project.setUpdateTime(LocalDateTime.now());
             project.setUpdateUser(user.getUserName());
         }
+        boolean save = iProjectService.saveOrUpdate(project);
         if (save){
             return ResultUtil.success(Constant.SCUUESS_MSG);
         }else {
             return ResultUtil.error(Constant.ERROR_MSG);
         }
     }
+
+    @RequestMapping("/deleteOne")
+    public ResultUtil deleteOne(Integer proId){
+        return ResultUtil.flag( iProjectService.removeById(proId));
+    }
+
+
+    @RequestMapping("/toDocs")
+    public ModelAndView toDocs(Integer proId){
+        logger.debug("----------------------------- "+proId);
+        if (IntegerUtils.isNotBlank(proId)){
+            getSession().setAttribute(Constant.PRO_ID,proId);
+        }
+        ModelAndView mv = new ModelAndView(thyme + "/docs");
+        Project project = iProjectService.getById(proId);
+        mv.addObject("project",project);
+        User user = getUser();
+        mv.addObject("user",user);
+        return mv;
+    }
+
 
 }

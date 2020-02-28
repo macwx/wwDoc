@@ -58,6 +58,8 @@ public class UserController extends BaseControler {
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 //        2.获取Subject
         Subject subject = SecurityUtils.getSubject();
+        //设置登录时长为永不过期
+        subject.getSession().setTimeout(-1000L);
 //        3.通过Subject 的login方法 完成登录
         try {
             // 到这里如果没有异常说明登录成功，
