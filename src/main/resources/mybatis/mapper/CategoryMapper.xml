@@ -2,4 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.macw.wwdoc.mapper.CategoryMapper">
 
+    <resultMap id="listTreeSelectVoMap" type="com.macw.wwdoc.entity.vo.TreeSelectVo">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <collection property="children" ofType="com.macw.wwdoc.entity.vo.TreeSelectVo">
+            <id column="id2" property="id"></id>
+            <result column="name2" property="name"></result>
+        </collection>
+    </resultMap>
+    <select id="listTreeSelectVo" resultMap="listTreeSelectVoMap">
+        SELECT
+        cate1.category_id AS id,
+        cate1.category_name AS `name`,
+        cate2.category_id AS id2,
+        cate2.category_name AS name2
+        FROM
+        api_category AS cate1
+        LEFT JOIN api_category AS cate2 ON cate1.category_id = cate2.parent_id
+        WHERE
+        cate1.project_id = #{proId}
+
+
+    </select>
 </mapper>

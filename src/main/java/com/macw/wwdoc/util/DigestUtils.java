@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * MD5加密工具类
+ */
 public class DigestUtils {
     // 获取md5加密算法对象
     private final static MessageDigest md;

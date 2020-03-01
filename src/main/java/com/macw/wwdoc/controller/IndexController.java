@@ -23,9 +23,10 @@ public class IndexController  extends BaseControler {
 //        return "doc/index";
         return new ModelAndView(thyme + "/user/login");
     }
+    //putPolicy.put("callbackBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"key\":\"$(imageInfo.width)\",\"h\":\"$(imageInfo.height)\"}");
 
-    @RequestMapping("/layuimini")
-    public ModelAndView layuimini(){
+    @RequestMapping("/wwDoc")
+    public ModelAndView wwDoc(){
         ModelAndView mv = new ModelAndView(thyme+"/index");
         User user = getUser();
         mv.addObject("user",user);

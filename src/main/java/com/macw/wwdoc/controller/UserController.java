@@ -10,6 +10,7 @@ import com.macw.wwdoc.util.ResultUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,5 +81,19 @@ public class UserController extends BaseControler {
         }
     }
 
+    @RequestMapping("/loginLou")
+    public ResultUtil loginLou(){
+        try {
+            getSession().getAttribute(Constant.LOGIN_USER);
+            Subject subject = SecurityUtils.getSubject();
+            subject.logout();
+            return ResultUtil.success(Constant.LOGIN_OUT);
+        } catch (InvalidSessionException e) {
+            e.printStackTrace();
+            logger.debug("-----------/user/loginLou");
+            return ResultUtil.error(Constant.ERROR_MSG);
+        }
+
+    }
 
 }

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="views/include :: header('添加Api')"/>
+
+    <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}" />
+    <script th:src="@{/editormd/editormd.min.js}" ></script>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main layui-top-box">
+        <div style="padding-bottom: 10px;" id="LAY_lay_add">
+            <form class="layui-form layui-form-pane" >
+                <div class="layui-form-item">
+                    <div class="layui-input-inline" style="width: 500px">
+                        <label class="layui-form-label required layui-bg-blue" >标题:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="articleTitle" lay-verify="required" lay-reqtext="标题不能为空"
+                                   placeholder="请输入标题"
+                                   value="" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-input-inline" style="width: 500px">
+                        <label class="layui-form-label required layui-bg-blue">目录:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="tree" lay-filter="tree" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-input-inline" style="width: 200px;text-align: right">
+                        <button class="layui-btn layuiadmin-btn-role " data-type="add" id="add">
+                            <i class="layui-icon layui-icon-add-circle-fine"></i> 历史版本
+                        </button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-inline" style="width: 200px">
+                    <button class="layui-btn  " data-type="add" id="add">
+                        <i class="layui-icon layui-icon-add-circle-fine"></i> 插入API接口模板
+                    </button>
+                    </div>
+                    <div class="layui-input-inline" style="width: 200px">
+                        <button class="layui-btn  " data-type="add" id="add">
+                            <i class="layui-icon layui-icon-add-circle-fine"></i> 插入数据字典模板
+                        </button>
+                    </div>
+                    <div class="layui-input-inline" style="width: 200px">
+                        <button class="layui-btn  " data-type="add" id="add">
+                            <i class="layui-icon layui-icon-add-circle-fine"></i> 更多模板
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="editormd" id="test-editormd">
+                        <textarea class="editormd-markdown-textarea" name="test-editormd-markdown-doc" id="content"></textarea>
+                        <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                        <textarea class="editormd-html-textarea" name="editormd-html-textarea" id="htmlContent"></textarea>
+                    </div>
+
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(function() {
+        editormd("test-editormd", {
+            width   : "90%",
+            height  : 640,
+            syncScrolling : "single",
+            tex : true, // 开启科学公式TeX语言支持，默认关闭
+            flowChart : true, // 开启流程图支持，默认关闭
+            path    : "/editormd/lib/",
+            tocm : true, // Using [TOCM]
+            saveHTMLToTextarea : true,   //这个配置在simple.html中并没有，但是为了能够提交表单，使用这个配置可以让构造出来的HTML代码直接在第二个隐藏的textarea域中，方便post提交表单。
+            /* 上传图片配置 */
+            imageUpload : true,
+            imageFormats : [ "jpg", "jpeg", "gif", "png", "bmp", "webp" ],
+            imageUploadURL : "${proPath}/base/blog/upFile", //注意你后端的上传图片服务地址
+        });
+    });
+
+    layui.use(['form', 'layuimini', 'treeSelect'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.jquery,
+            treeSelect = layui.treeSelect,
+            layuimini = layui.layuimini;
+
+
+        treeSelect.render({
+            // 选择器
+            elem: '#tree',
+            // 数据
+            data: '/apidetail/getTreeSelectVos',
+            // 异步加载方式：get/post，默认get
+            type: 'get',
+            // 占位符
+            placeholder: '请选择所属目录',
+            // 是否开启搜索功能：true/false，默认false
+            search: true,
+            // 点击回调
+            click: function (d) {
+                console.log(d);
+            },
+            // 加载完成后的回调函数
+            success: function (d) {
+                console.log(d);
+//                选中节点，根据id筛选
+//                treeSelect.checkNode('tree', 3);
+
+//                获取zTree对象，可以调用zTree方法
+//                var treeObj = treeSelect.zTree('tree');
+//                console.log(treeObj);
+
+//                刷新树结构
+//                treeSelect.refresh();
+            }
+        });
+
+        $("#pwd").hide();
+        form.on('radio(sm)', function (data) {
+            // console.log(data.elem); //得到radio原始DOM对象
+            // console.log(data.value); //被点击的radio的value值
+            if (data.value == 0) {
+                $("#pwd").show();
+            }
+            if (data.value == 1) {
+                $("#pwd").hide();
+            }
+        });
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            console.log(data);
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            $.ajax({
+                url: "/project/addOrUpdate",
+                data: data.field,
+                type: "post",
+                //4.接收后台修改响应回来的数据；关闭弹出层、提示修改信息、刷新table
+                success: function (data) {
+                    if (data.code == 0) {
+                        layer.msg(data.msg, {
+                            offset: '15px',
+                            icon: 6,
+                            time: 2000
+                        }, function () {
+                            parent.layer.close(index);
+                            parent.location.reload();
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 2000
+                        });
+                    }
+
+                    //确认框关闭掉
+                    layer.close(index);
+                }
+            });
+            return false;//阻止跳转；
+        });
+
+
+    });
+</script>
+
+
+</body>
+</html>

@@ -109,13 +109,9 @@
         });
 
         $('.login-out').on("click", function () {
-            layer.msg('退出登录成功', function () {
-                window.location = '/page/login-1.html';
-            });
             layer.confirm('确定要退出当前登录用户？', function(index){
                 $.ajax({
-                    url:'/category/deleteCategory',
-                    data: {"categoryId":data.categoryId},
+                    url:'/user/loginLou',
                     type: 'post',
                     dataType: 'json',
                     success:function(data){
@@ -125,8 +121,7 @@
                                 icon: 6,
                                 time: 1000
                             }, function(){
-                                parent.layer.close(index);
-                                parent.location.reload();
+                                window.location = '/user/toLogin';
                             });
                         }else {
                             layer.msg(data.msg, {

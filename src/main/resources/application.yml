@@ -60,3 +60,14 @@ mybatis-plus:
 
 logging:
   config: classpath:logback.xml
+
+
+
+# 七牛密钥，配上自己申请的七牛账号对应的密钥
+qiniu:
+  AccessKey: iPq9dj6MhD5eljxeQ-7HQ2merNoS1aW1ja_eBbU7
+  SecretKey: MBEZwpuIjd3bnVYox6_v6AuJN9mTv_e-A__RWkLF
+  # 七牛空间名
+  Bucket: wwdoc
+  # 外链访问路径
+  prefix: http://wwdoc.henaumcw.top/
