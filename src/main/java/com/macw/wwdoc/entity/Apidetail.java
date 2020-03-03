@@ -44,7 +44,7 @@ public class Apidetail implements Serializable {
     /**
      * 文章标题
      */
-    private String articleTitle;
+    private String title;
 
     /**
      * 文章描述
@@ -97,6 +97,11 @@ public class Apidetail implements Serializable {
     private String failGoback;
 
     /**
+     * 文章内容
+     */
+    private String context;
+
+    /**
      * 文章备注
      */
     private String remark;
@@ -117,24 +122,9 @@ public class Apidetail implements Serializable {
     private Integer createId;
 
     /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
-     * 更新人
-     */
-    private String updateUser;
-
-    /**
-     * 更新人id
-     */
-    private Integer updateId;
-
-    /**
      * 版本号
      */
-    private String version;
+    private Integer version;
 
     /**
      * 1启用，0废弃
@@ -142,9 +132,9 @@ public class Apidetail implements Serializable {
     private Integer state;
 
     /**
-     * 是否删除，0可用，1已删除
+     * 是否最新版本，0不是，1最新
      */
-    private Integer isDel;
+    private Integer isNew;
 
 
 }

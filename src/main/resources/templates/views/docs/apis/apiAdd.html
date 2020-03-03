@@ -2,95 +2,129 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:include="views/include :: header('添加Api')"/>
-
-    <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}" />
-    <script th:src="@{/editormd/editormd.min.js}" ></script>
+    <meta name="toTop" content="true">
+    <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}"/>
+    <script th:src="@{/editormd/editormd.min.js}"></script>
+    <script th:src="@{/js/toTop.js}"></script>
 </head>
 <body>
 <div class="layuimini-container">
+    <div id='toTop'><img src='/img/top.png'></div>
     <div class="layuimini-main layui-top-box">
         <div style="padding-bottom: 10px;" id="LAY_lay_add">
-            <form class="layui-form layui-form-pane" >
+            <div class="layui-form layuimini-form">
                 <div class="layui-form-item">
                     <div class="layui-input-inline" style="width: 500px">
-                        <label class="layui-form-label required layui-bg-blue" >标题:</label>
+                        <label class="layui-form-label required layui-bg-blue" style="text-align: center">标题:</label>
                         <div class="layui-input-block">
-                            <input type="text" name="articleTitle" lay-verify="required" lay-reqtext="标题不能为空"
-                                   placeholder="请输入标题"
-                                   value="" class="layui-input">
+                            <input type="text" name="title" lay-verify="required" lay-reqtext="标题不能为空"
+                                   placeholder="请输入标题" class="layui-input"
+                                   th:value="${apidetail!=null?apidetail.title:''}" >
                         </div>
                     </div>
 
                     <div class="layui-input-inline" style="width: 500px">
-                        <label class="layui-form-label required layui-bg-blue">目录:</label>
+                        <label class="layui-form-label required layui-bg-blue" style="text-align: center">目录:</label>
                         <div class="layui-input-block">
-                            <input type="text" id="tree" lay-filter="tree" class="layui-input">
+                            <label for="tree"></label><input type="text" id="tree" lay-filter="tree"
+                                                             class="layui-input">
+                            <input type="hidden" name="categoryId" id="categoryTree" value="">
                         </div>
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-inline" style="width: 200px">
+                        <button class="layui-btn  " data-type="add_api" id="add_api">
+                            <i class="layui-icon layui-icon-list"></i> 插入API接口模板
+                        </button>
+                    </div>
+                    <div class="layui-input-inline" style="width: 200px">
+                        <button class="layui-btn  " data-type="add_data" id="add_data">
+                            <i class="layui-icon layui-icon-read"></i> 插入数据字典模板
+                        </button>
+                    </div>
+                    <div class="layui-input-inline" style="width: 200px">
+                        <button class="layui-btn " data-type="add_more" id="add_more">
+                            <i class="layui-icon layui-icon-template-1"></i> 更多模板
+                        </button>
                     </div>
                     <div class="layui-input-inline" style="width: 200px;text-align: right">
-                        <button class="layui-btn layuiadmin-btn-role " data-type="add" id="add">
-                            <i class="layui-icon layui-icon-add-circle-fine"></i> 历史版本
+                        <button class="layui-btn layuiadmin-btn-role " data-type="show_version" id="show_version">
+                            <i class="layui-icon layui-icon-about"></i> 历史版本
                         </button>
                     </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="editormd" id="test-editormd">
+                        <textarea class="editormd-markdown-textarea" name="context">欢迎使用wwDoc</textarea>
+                        <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                        <!-- <textarea class="editormd-html-textarea" ></textarea>-->
+                    </div>
+
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-inline" style="width: 200px">
-                    <button class="layui-btn  " data-type="add" id="add">
-                        <i class="layui-icon layui-icon-add-circle-fine"></i> 插入API接口模板
-                    </button>
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="saveBtn">确认保存</button>
+                        </div>
                     </div>
                     <div class="layui-input-inline" style="width: 200px">
-                        <button class="layui-btn  " data-type="add" id="add">
-                            <i class="layui-icon layui-icon-add-circle-fine"></i> 插入数据字典模板
-                        </button>
-                    </div>
-                    <div class="layui-input-inline" style="width: 200px">
-                        <button class="layui-btn  " data-type="add" id="add">
-                            <i class="layui-icon layui-icon-add-circle-fine"></i> 更多模板
-                        </button>
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveTemplate">另存为模板
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                <div>
-                    <div class="editormd" id="test-editormd">
-                        <textarea class="editormd-markdown-textarea" name="test-editormd-markdown-doc" id="content"></textarea>
-                        <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
-                        <textarea class="editormd-html-textarea" name="editormd-html-textarea" id="htmlContent"></textarea>
-                    </div>
-
-                </div>
-
-
-            </form>
+            </div>
         </div>
     </div>
 </div>
 
+<div class="layuimini-container" id="more_table" hidden>
+    <div class="layuimini-main">
+        <table id="munu-table" class="layui-table" lay-filter="munu-table"></table>
+    </div>
+</div>
+<!-- 操作列 -->
+<script type="text/html" id="auth-state">
+    <a class="layui-btn  layui-btn-sm" lay-event="edit"><i class="layui-icon">&#xe642;</i>插入此模板</a>
+    <a class="layui-btn layui-btn-danger  layui-btn-sm" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+
+
 <script>
 
-    $(function() {
-        editormd("test-editormd", {
-            width   : "90%",
-            height  : 640,
-            syncScrolling : "single",
-            tex : true, // 开启科学公式TeX语言支持，默认关闭
-            flowChart : true, // 开启流程图支持，默认关闭
-            path    : "/editormd/lib/",
-            tocm : true, // Using [TOCM]
-            saveHTMLToTextarea : true,   //这个配置在simple.html中并没有，但是为了能够提交表单，使用这个配置可以让构造出来的HTML代码直接在第二个隐藏的textarea域中，方便post提交表单。
-            /* 上传图片配置 */
-            imageUpload : true,
-            imageFormats : [ "jpg", "jpeg", "gif", "png", "bmp", "webp" ],
-            imageUploadURL : "${proPath}/base/blog/upFile", //注意你后端的上传图片服务地址
-        });
-    });
-
-    layui.use(['form', 'layuimini', 'treeSelect'], function () {
-        var form = layui.form,
+    layui.use(['form','table','layer', 'treeSelect'], function () {
+        const form = layui.form,
             layer = layui.layer,
             $ = layui.jquery,
-            treeSelect = layui.treeSelect,
-            layuimini = layui.layuimini;
+            table = layui.table,
+            treeSelect = layui.treeSelect;
+
+        let editor;
+        $(function () {
+            editor = editormd("test-editormd", {
+                width: "100%",
+                height: 640,
+                syncScrolling: "single",
+                tex: true, // 开启科学公式TeX语言支持，默认关闭
+                flowChart: true, // 开启流程图支持，默认关闭
+                path: "/editormd/lib/",
+                tocm: true, // Using [TOCM]
+                saveHTMLToTextarea: true,   //这个配置在simple.html中并没有，但是为了能够提交表单，使用这个配置可以让构造出来的HTML代码直接在第二个隐藏的textarea域中，方便post提交表单。
+                /* 上传图片配置 */
+                imageUpload: true,
+                imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL: "/FileUpload/fileUpload", //注意你后端的上传图片服务地址
+                //自定义工具栏
+                /* toolbarIcons : function() {
+                     return ["undo","redo","|","bold","italic","quote","uppercase","lowercase","|","h1","h2","h3","h4","|","list-ul","list-ol","hr","|","link","image","code","code-block","table","html-entities","|","watch","preview","fullscreen","clear","|","help"]
+                 },*/
+
+            });
+        });
 
 
         treeSelect.render({
@@ -106,53 +140,154 @@
             search: true,
             // 点击回调
             click: function (d) {
-                console.log(d);
+                $("#categoryTree").val(d.current.id);
             },
             // 加载完成后的回调函数
             success: function (d) {
-                console.log(d);
 //                选中节点，根据id筛选
 //                treeSelect.checkNode('tree', 3);
-
 //                获取zTree对象，可以调用zTree方法
 //                var treeObj = treeSelect.zTree('tree');
 //                console.log(treeObj);
-
 //                刷新树结构
 //                treeSelect.refresh();
             }
         });
 
-        $("#pwd").hide();
-        form.on('radio(sm)', function (data) {
-            // console.log(data.elem); //得到radio原始DOM对象
-            // console.log(data.value); //被点击的radio的value值
-            if (data.value == 0) {
-                $("#pwd").show();
+        let index;
+        let active = {
+            add_api: function () {
+                $.ajax({
+                    url: "/template/selectTemplate?temId=1",
+                    type: "post",
+                    success: function (data) {
+                        if (data.code === 0) {
+                            layer.msg(data.msg);
+                            editor.insertValue(data.data.context);
+                        } else {
+                            layer.msg(data.msg, {
+                                icon: 5,
+                                time: 2000
+                            });
+                        }
+                    }
+                });
+            },
+            add_data: function () {
+                $.ajax({
+                    url: "/template/selectTemplate?temId=2",
+                    type: "post",
+                    success: function (data) {
+                        if (data.code === 0) {
+                            layer.msg(data.msg);
+                            editor.insertValue(data.data.context);
+                        } else {
+                            layer.msg(data.msg, {
+                                icon: 5,
+                                time: 2000
+                            });
+                        }
+                    }
+                });
+            },
+            add_more: function () {
+                table.reload('munu-table', {
+                });
+                 index = layer.open({
+                    title: "查看自定义模板",
+                    content: $("#more_table"),
+                    type: 1,
+                    area: ['690px', '500px']
+                });
+            },
+            show_version: function () {
+
             }
-            if (data.value == 1) {
-                $("#pwd").hide();
+        };
+
+        let tab_tab = table.render({
+            elem: '#munu-table',
+            url: '/template/selectTemplateByUser', //数据接口
+            page: true,
+            limit: 10,
+            limits: [10, 20, 30],
+            cols: [
+                [
+                    {
+                        title: "保存时间", field: "createTime",width: 180,  align: "center",
+                        templet: function (d) {
+                            if (d.createTime != null) {
+                                return layui.util.toDateString(d.createTime);
+                            }
+                            return '';
+                        }
+                    },
+                    {title: "模板标题", field: "title",width: 200, align: "center"},
+                    {title: "操作", templet: '#auth-state',width: 250, align: 'center',}
+                ]
+            ]
+        });
+
+
+        //监听工具条
+        table.on('tool(munu-table)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'del') {
+                layer.confirm('确认删除此模板吗？', function (index) {
+
+                    $.ajax({
+                        url: '/template/deleteOne',
+                        data: {"tempId": data.templateId},
+                        type: 'post',
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.code == 0) {
+                                layer.msg(data.msg, {
+                                    offset: '15px',
+                                    icon: 6,
+                                    time: 1000
+                                }, function () {
+                                    table.reload('munu-table', {
+                                    });
+                                });
+                            } else {
+                                layer.msg(data.msg, {
+                                    icon: 5,
+                                    time: 2000
+                                });
+                            }
+                        }, error: function (data) {
+                            layer.msg("操作失败", {time: 1000, icon: 5});
+                        }
+                    });
+                });
+            } else if (layEvent === 'edit') {
+                editor.insertValue(data.context);
+                layer.close(index);
+                layer.msg("插入成功");
             }
         });
 
+
+
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            console.log(data);
-            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            const index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            //获取getMarkdown文本内容
+            // alert(editor.getMarkdown());
             $.ajax({
-                url: "/project/addOrUpdate",
+                url: "/apidetail/addApi",
                 data: data.field,
                 type: "post",
                 //4.接收后台修改响应回来的数据；关闭弹出层、提示修改信息、刷新table
                 success: function (data) {
-                    if (data.code == 0) {
+                    if (data.code === 0) {
                         layer.msg(data.msg, {
                             offset: '15px',
                             icon: 6,
                             time: 2000
-                        }, function () {
-                            parent.layer.close(index);
-                            parent.location.reload();
                         });
                     } else {
                         layer.msg(data.msg, {
@@ -160,18 +295,42 @@
                             time: 2000
                         });
                     }
-
-                    //确认框关闭掉
-                    layer.close(index);
                 }
             });
             return false;//阻止跳转；
         });
 
+        //监听提交
+        form.on('submit(saveTemplate)', function (data) {
+            const index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            $.ajax({
+                url: "/template/addTemplate",
+                data: data.field,
+                type: "post",
+                //4.接收后台修改响应回来的数据；关闭弹出层、提示修改信息、刷新table
+                success: function (data) {
+                    if (data.code === 0) {
+                        layer.msg(data.msg, {
+                            offset: '15px',
+                            icon: 6,
+                            time: 2000
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 2000
+                        });
+                    }
+                }
+            });
+            return false;//阻止跳转；
+        });
 
+        $('.layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
     });
 </script>
-
-
 </body>
 </html>

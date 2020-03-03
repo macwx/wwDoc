@@ -34,12 +34,12 @@ public class Template implements Serializable {
     /**
      * 模板标题
      */
-    private String templateTitle;
+    private String title;
 
     /**
-     * 所关联文章id
+     * 内容
      */
-    private Integer articleId;
+    private String context;
 
     /**
      * 创建人name
@@ -55,11 +55,6 @@ public class Template implements Serializable {
      * 创建时间
      */
     private LocalDateTime createTime;
-
-    /**
-     * 是否删除
-     */
-    private Integer isDel;
 
 
 }

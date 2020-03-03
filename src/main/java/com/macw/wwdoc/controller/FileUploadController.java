@@ -1,13 +1,12 @@
 package com.macw.wwdoc.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.macw.wwdoc.entity.vo.Ret;
 import com.macw.wwdoc.service.IQiniuUploadFileService;
-import com.qiniu.common.QiniuException;
-import com.qiniu.http.Response;
+import com.macw.wwdoc.util.FileUploadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,18 +30,34 @@ public class FileUploadController {
     private IQiniuUploadFileService iQiniuUploadFileService;
 
     @RequestMapping("/fileUpload")
-    public String fileUpload(File file) throws QiniuException {
-        String url = iQiniuUploadFileService.uploadFile(file);
-        return url;
+    public JSONObject fileUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "editormd-image-file", required = false) MultipartFile attach) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            request.setCharacterEncoding("utf-8");
+            response.setHeader("Content-Type", "text/html");
+
+            String url = iQiniuUploadFileService.uploadFile(attach);
+            // 下面response返回的json格式是editor.md所限制的，规范输出就OK
+
+            jsonObject.put("success", 1);
+            jsonObject.put("message", "上传成功");
+            jsonObject.put("url", url);
+        } catch (Exception e) {
+            jsonObject.put("success", 0);
+        }
+
+        return jsonObject;
+
     }
 
     /**
      * 暂时不用
+     *
      * @param request
      * @param response
      */
     @RequestMapping("/callBack")
-    public void callBack(HttpServletRequest request, HttpServletResponse response)  {
+    public void callBack(HttpServletRequest request, HttpServletResponse response) {
         try {
             // 接收七牛回调过来的内容
             String line = "";
@@ -57,7 +72,6 @@ public class FileUploadController {
             e.printStackTrace();
         }
     }
-
 
 
 }

@@ -2,8 +2,10 @@ package com.macw.wwdoc.service;
 
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 
@@ -20,7 +22,15 @@ public interface IQiniuUploadFileService {
      * @return
      * @throws QiniuException
      */
-    String uploadFile(File file) throws QiniuException;
+     String uploadFile(File file) throws QiniuException;
+
+    /**
+     * File 文件上传
+     * @param file
+     * @return
+     * @throws Exception
+     */
+     String uploadFile(MultipartFile file) throws  Exception;
 
     /**
      * 流形势文件上传

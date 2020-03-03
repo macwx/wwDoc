@@ -3,6 +3,7 @@ package com.macw.wwdoc.service.impl;
 import com.macw.wwdoc.entity.vo.Ret;
 import com.macw.wwdoc.service.IQiniuUploadFileService;
 import com.macw.wwdoc.util.DateUtil;
+import com.macw.wwdoc.util.FileUploadUtil;
 import com.macw.wwdoc.util.UUIDUtil;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
@@ -14,8 +15,10 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 
@@ -64,6 +67,22 @@ public class QiniuUploadFileServiceImpl implements IQiniuUploadFileService, Init
             retry++;
         }
         return getUrl(response);
+    }
+
+    @Override
+    public String uploadFile(MultipartFile file) throws Exception {
+        //multipartFile转File
+        File attach = FileUploadUtil.multipartFileConverFile(file);
+        Response response = this.uploadManager.put(attach, null, getUploadToken());
+        int retry = 0;
+        while (response.needRetry() && retry < 3) {
+            response = this.uploadManager.put(attach, null, getUploadToken());
+            retry++;
+        }
+        String url = getUrl(response);
+        //删除临时文件
+        FileUploadUtil.delteTempFile(attach);
+        return url;
     }
 
     /**

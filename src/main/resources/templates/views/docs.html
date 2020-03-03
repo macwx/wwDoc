@@ -14,7 +14,7 @@
         </a>
         <ul class="layui-nav layui-layout-left layui-header-menu ">
             <li class="layui-nav-item">
-                <a href="/layuimini"><i class="fa fa-undo"></i> 返回项目列表</a>
+                <a href="/wwDoc"><i class="fa fa-undo"></i> 返回项目列表</a>
             </li>
         </ul>
         <ul class="layui-nav layui-layout-right">
@@ -93,7 +93,6 @@
 
         var url = "menu/doc";
         $.getJSON(url, function (data, status) {
-            console.log(data);
             if (data == null) {
                 layuimini.msg_error('暂无菜单信息');
             } else {
@@ -105,7 +104,7 @@
 
         $('.login-out').on("click", function () {
             layer.msg('退出登录成功', function () {
-                window.location = '/page/login-1.html';
+                window.location = '/user/toLogin';
             });
         });
     });
