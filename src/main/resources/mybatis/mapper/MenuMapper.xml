@@ -2,35 +2,4 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.macw.wwdoc.mapper.MenuMapper">
 
-    <resultMap id="listMenuVoMap" type="com.macw.wwdoc.entity.vo.MenuVo">
-        <result column="href" property="href"/>
-        <result column="title" property="title"/>
-        <result column="icon" property="icon"/>
-        <collection property="child" ofType="com.macw.wwdoc.entity.vo.MenuVo">
-            <result column="chref" property="href"/>
-            <result column="ctitle" property="title"/>
-            <result column="cicon" property="icon"/>
-        </collection>
-    </resultMap>
-    <select id="listMenuVo" resultMap="listMenuVoMap">
-        SELECT
-            menu.menu_id,
-            menu.path href,
-            menu.title title,
-            menu.icon icon,
-            child.menu_id,
-            child.path chref,
-            child.title ctitle,
-            child.icon cicon
-            FROM
-            api_menu AS menu
-            LEFT JOIN api_menu AS child ON menu.menu_id = child.pid
-            WHERE
-            menu.isdel = 0 AND
-            menu.`status` = 1 AND
-            menu.pid = 0 AND
-            menu.identify = #{identify}
-            ORDER BY menu.sort DESC
-    </select>
-
 </mapper>

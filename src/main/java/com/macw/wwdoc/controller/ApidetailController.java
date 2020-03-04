@@ -6,8 +6,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.macw.wwdoc.Constant;
 import com.macw.wwdoc.entity.Apidetail;
-import com.macw.wwdoc.entity.Category;
-import com.macw.wwdoc.entity.Template;
 import com.macw.wwdoc.entity.User;
 import com.macw.wwdoc.entity.vo.TreeSelectVo;
 import com.macw.wwdoc.mapper.CategoryMapper;
@@ -19,7 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -121,11 +118,21 @@ public class ApidetailController extends BaseControler {
         return treeSelectVos;
     }
 
+    @RequestMapping("/toAPIList")
+    public ModelAndView toAPIList(){
+        ModelAndView mv = new ModelAndView(thyme + "/docs/apis/apiList");
+        return mv;
+    }
+
+
     @RequestMapping("/listApi")
-    public ResultUtil listApi(int page, int limit){
+    public ResultUtil listApi(int page, int limit,Integer categoryId,String title){
         Page<Apidetail> apidetailPage = new Page<>(page, limit);
         Page<Apidetail> page1 = iApidetailService.page(apidetailPage, new QueryWrapper<Apidetail>().lambda()
-                .eq(Apidetail::getProjectId, getProId()));
+                .eq(Apidetail::getProjectId, getProId())
+        .eq(Apidetail::getIsNew, 1)
+        .eq(IntegerUtils.isNotBlank(categoryId), Apidetail::getCategoryId, categoryId)
+        .like(StringUtils.isNotBlank(title), Apidetail::getTitle, title));
         ResultUtil<Object> success = ResultUtil.success(Constant.SELECT_SUCCESS);
         success.setCount(page1.getTotal());
         success.setData(page1.getRecords());

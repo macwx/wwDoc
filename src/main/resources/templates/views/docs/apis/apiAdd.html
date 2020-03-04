@@ -18,7 +18,7 @@
                         <label class="layui-form-label required layui-bg-blue" style="text-align: center">标题:</label>
                         <div class="layui-input-block">
                             <input type="text" name="title" lay-verify="required" lay-reqtext="标题不能为空"
-                                   placeholder="请输入标题" class="layui-input"
+                                   placeholder="请输入标题" class="layui-input" autocomplete="off"
                                    th:value="${apidetail!=null?apidetail.title:''}" >
                         </div>
                     </div>
@@ -27,8 +27,9 @@
                         <label class="layui-form-label required layui-bg-blue" style="text-align: center">目录:</label>
                         <div class="layui-input-block">
                             <label for="tree"></label><input type="text" id="tree" lay-filter="tree"
-                                                             class="layui-input">
+                                                             autocomplete="off"    class="layui-input">
                             <input type="hidden" name="categoryId" id="categoryTree" value="">
+                            <input type="hidden" name="categoryName" id="categoryName" value="">
                         </div>
                     </div>
 
@@ -141,6 +142,7 @@
             // 点击回调
             click: function (d) {
                 $("#categoryTree").val(d.current.id);
+                $("#categoryName").val(d.current.name);
             },
             // 加载完成后的回调函数
             success: function (d) {
@@ -288,6 +290,8 @@
                             offset: '15px',
                             icon: 6,
                             time: 2000
+                        },function () {
+                            window.location.href = '/apidetail/toAPIList';
                         });
                     } else {
                         layer.msg(data.msg, {

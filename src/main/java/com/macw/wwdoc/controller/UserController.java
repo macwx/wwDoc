@@ -1,6 +1,8 @@
 package com.macw.wwdoc.controller;
 
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.CircleCaptcha;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.macw.wwdoc.Constant;
 import com.macw.wwdoc.entity.User;
@@ -11,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.InvalidSessionException;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  * <p>
@@ -49,10 +56,17 @@ public class UserController extends BaseControler {
     }
 
     @RequestMapping("/userLogin")
-    public ResultUtil userLogin(String username, String password) {
+    public ResultUtil userLogin(String username, String password,String captchaCode) {
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
             return ResultUtil.error(Constant.PARAM_FAIL);
         }
+        //判断验证码是否有限
+        Session session = getSession();
+        if (!session.getAttribute("captchaCode").equals(captchaCode)){
+            return ResultUtil.error("验证码错误或已过期！");
+        }
+        //清除session中的验证码
+        session.removeAttribute("captchaCode");
         //  1.将用户输入的账号密码 封装在token中
         password = DigestUtils.md5(password);
         logger.debug("password=== " +password);
@@ -94,6 +108,31 @@ public class UserController extends BaseControler {
             return ResultUtil.error(Constant.ERROR_MSG);
         }
 
+    }
+
+    /**
+     * 生成验证码
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping("/captcha")
+    public void getCaptcha(HttpServletResponse response) throws IOException {
+        //官方文档：https://hutool.cn/docs/#/
+        //定义图形验证码的长和宽
+        CircleCaptcha captcha = CaptchaUtil.createCircleCaptcha(200, 100, 4, 20);
+
+        //输出code 打印生成的验证码
+        logger.debug(captcha.getCode());
+        Session session = getSession();
+        session.setAttribute("captchaCode",captcha.getCode());
+        logger.debug("---"+session.getAttribute("captchaCode"));
+        //图片输出 响应流
+        ServletOutputStream outputStream = response.getOutputStream();
+        //图形验证码写出，可以写出到文件，也可以写出到流
+        captcha.write(outputStream);
+        //释放资源
+        outputStream.flush();
+        outputStream.close();
     }
 
 }

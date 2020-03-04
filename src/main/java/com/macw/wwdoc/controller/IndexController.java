@@ -1,10 +1,21 @@
 package com.macw.wwdoc.controller;
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.CircleCaptcha;
 import com.macw.wwdoc.entity.User;
+import org.apache.shiro.session.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.Console;
+import java.io.IOException;
 
 /**
  * @author 马超伟
@@ -18,12 +29,13 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class IndexController  extends BaseControler {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @RequestMapping({"/","/index",""})
     public ModelAndView index(){
 //        return "doc/index";
         return new ModelAndView(thyme + "/user/login");
     }
-    //putPolicy.put("callbackBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"key\":\"$(imageInfo.width)\",\"h\":\"$(imageInfo.height)\"}");
 
     @RequestMapping("/wwDoc")
     public ModelAndView wwDoc(){
@@ -32,4 +44,12 @@ public class IndexController  extends BaseControler {
         mv.addObject("user",user);
         return mv;
     }
+
+    @RequestMapping("/404")
+    public ModelAndView toNull(){
+        return new ModelAndView(thyme+"/404");
+    }
+
+
+
 }
