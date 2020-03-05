@@ -25,7 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -38,7 +37,7 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("/user")
-public class UserController extends BaseControler {
+public class UserController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -125,7 +124,6 @@ public class UserController extends BaseControler {
         logger.debug(captcha.getCode());
         Session session = getSession();
         session.setAttribute("captchaCode",captcha.getCode());
-        logger.debug("---"+session.getAttribute("captchaCode"));
         //图片输出 响应流
         ServletOutputStream outputStream = response.getOutputStream();
         //图形验证码写出，可以写出到文件，也可以写出到流
@@ -133,6 +131,11 @@ public class UserController extends BaseControler {
         //释放资源
         outputStream.flush();
         outputStream.close();
+    }
+
+    @RequestMapping("/toWelcome")
+    public ModelAndView toWelcome(){
+        return new ModelAndView(thyme+"/welcome");
     }
 
 }

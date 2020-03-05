@@ -1,21 +1,11 @@
 package com.macw.wwdoc.controller;
 
-import cn.hutool.captcha.CaptchaUtil;
-import cn.hutool.captcha.CircleCaptcha;
 import com.macw.wwdoc.entity.User;
-import org.apache.shiro.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.Console;
-import java.io.IOException;
 
 /**
  * @author 马超伟
@@ -27,7 +17,7 @@ import java.io.IOException;
  * Company       Huerdai Henan LTD.
  */
 @Controller
-public class IndexController  extends BaseControler {
+public class IndexController  extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 

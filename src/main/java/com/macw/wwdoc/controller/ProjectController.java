@@ -7,7 +7,6 @@ import com.macw.wwdoc.entity.User;
 import com.macw.wwdoc.service.IProjectService;
 import com.macw.wwdoc.util.IntegerUtils;
 import com.macw.wwdoc.util.ResultUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +28,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/project")
-public class ProjectController extends BaseControler{
+public class ProjectController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 

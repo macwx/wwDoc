@@ -94,19 +94,8 @@
             element = layui.element,
             layer = layui.layer;
 
-        layuimini.init('layuimini/api/init.json');
-
-        var url = "menu/index";
-        $.getJSON(url, function (data, status) {
-            console.log(data);
-            if (data == null) {
-                layuimini.msg_error('暂无菜单信息');
-            } else {
-                layuimini.initMenu(data.menuInfo);
-            }
-        }).fail(function () {
-            layuimini.msg_error('菜单接口有误');
-        });
+        //layuimini.init('layuimini/api/init.json');
+        layuimini.init('menu/index');
 
         $('.login-out').on("click", function () {
             layer.confirm('确定要退出当前登录用户？', function(index){

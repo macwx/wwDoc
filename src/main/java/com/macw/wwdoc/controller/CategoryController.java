@@ -30,7 +30,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/category")
-public class CategoryController extends BaseControler {
+public class CategoryController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 

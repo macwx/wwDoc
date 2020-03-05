@@ -116,7 +116,7 @@ public class Mygenereator {
          strategy.setSuperControllerClass("com.macw.wwdoc.controller.BaseController");
         // 写于父类中的公共字段
 //        strategy.setSuperEntityColumns("id");
-//        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
+        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
         strategy.setTablePrefix("api_");
         strategy.setControllerMappingHyphenStyle(true);
 //        strategy.setTablePrefix(pc.getModuleName() + "_");

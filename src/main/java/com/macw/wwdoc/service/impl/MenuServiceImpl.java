@@ -44,7 +44,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         MenuVo menuVo = new MenuVo();
         menuVo.setTitle(title);
         menuVo.setIcon(icon);
-        menuVo.setHref("http://www.baidu.com");
         menuVo.setTarget("_self");
         menuVo.setChild(menuVos);
 

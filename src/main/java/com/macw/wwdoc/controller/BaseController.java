@@ -20,7 +20,7 @@ import java.io.IOException;
  * @date 2020/1/31 15:11
  */
 @RestController
-public class BaseControler {
+public class BaseController {
 
     /**
      * 定义主题

@@ -8,7 +8,6 @@ import com.macw.wwdoc.Constant;
 import com.macw.wwdoc.entity.Template;
 import com.macw.wwdoc.entity.User;
 import com.macw.wwdoc.service.ITemplateService;
-import com.macw.wwdoc.util.IntegerUtils;
 import com.macw.wwdoc.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * <p>
@@ -31,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/template")
-public class TemplateController extends BaseControler {
+public class TemplateController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 

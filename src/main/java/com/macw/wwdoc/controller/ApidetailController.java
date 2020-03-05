@@ -34,7 +34,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/apidetail")
-public class ApidetailController extends BaseControler {
+public class ApidetailController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
