@@ -47,9 +47,18 @@ public class ApidetailController extends BaseController {
     @Resource
     private CategoryMapper categoryMapper;
 
+    /**
+     * 添加APi 或者查询单个APi
+     * @param apiId
+     * @return
+     */
     @RequestMapping("/toApiAdd")
-    public ModelAndView toApiAdd() {
+    public ModelAndView toApiAdd(Integer apiId) {
         ModelAndView mv = new ModelAndView(thyme + "/docs/apis/apiAdd");
+        if (IntegerUtils.isNotBlank(apiId)){
+            Apidetail apidetail = iApidetailService.getById(apiId);
+            mv.addObject("apidetail", apidetail);
+        }
         return mv;
     }
 
@@ -124,7 +133,14 @@ public class ApidetailController extends BaseController {
         return mv;
     }
 
-
+    /**
+     * 查询API列表
+     * @param page
+     * @param limit
+     * @param categoryId
+     * @param title
+     * @return
+     */
     @RequestMapping("/listApi")
     public ResultUtil listApi(int page, int limit,Integer categoryId,String title){
         Page<Apidetail> apidetailPage = new Page<>(page, limit);
@@ -138,5 +154,16 @@ public class ApidetailController extends BaseController {
         success.setData(page1.getRecords());
         return success;
     }
+
+    /**
+     * 删除单个API
+     * @param apiId
+     * @return
+     */
+    @RequestMapping("/deleteOne")
+    public ResultUtil deleteOne(Integer apiId){
+        return ResultUtil.flag(iApidetailService.removeById(apiId));
+    }
+
 
 }

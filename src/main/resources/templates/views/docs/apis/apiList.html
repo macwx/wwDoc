@@ -98,7 +98,6 @@
             limits: [10, 20, 30],
             cols: [
                 [
-
                     {title: "分类名称", field: "categoryName",width:100, align: "center"},
                     {title: "API名称", field: "title", align: "center"},
                     {title: "最新版本", field: "version", align: "center",
@@ -131,11 +130,10 @@
             var layEvent = obj.event;
 
             if (layEvent === 'del') {
-                layer.confirm('确认删除此模板吗？', function (index) {
-
+                layer.confirm('确认删除该API吗？', function (index) {
                     $.ajax({
-                        url: '/template/deleteOne',
-                        data: {"tempId": data.templateId},
+                        url: '/apidetail/deleteOne',
+                        data: {"apiId": data.apidetailId},
                         type: 'post',
                         dataType: 'json',
                         success: function (data) {
@@ -160,9 +158,7 @@
                     });
                 });
             } else if (layEvent === 'edit') {
-                editor.insertValue(data.context);
-                layer.close(index);
-                layer.msg("插入成功");
+                window.location.href = '/apidetail/toApiAdd?apiId='+data.apidetailId;
             }
         });
 

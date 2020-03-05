@@ -19,17 +19,21 @@
                         <div class="layui-input-block">
                             <input type="text" name="title" lay-verify="required" lay-reqtext="标题不能为空"
                                    placeholder="请输入标题" class="layui-input" autocomplete="off"
-                                   th:value="${apidetail!=null?apidetail.title:''}" >
+                                   th:value="${apidetail!=null?apidetail.title:''}">
                         </div>
                     </div>
 
                     <div class="layui-input-inline" style="width: 500px">
                         <label class="layui-form-label required layui-bg-blue" style="text-align: center">目录:</label>
                         <div class="layui-input-block">
-                            <label for="tree"></label><input type="text" id="tree" lay-filter="tree"
-                                                             autocomplete="off"    class="layui-input">
-                            <input type="hidden" name="categoryId" id="categoryTree" value="">
-                            <input type="hidden" name="categoryName" id="categoryName" value="">
+
+                            <input type="text" id="tree" lay-filter="tree"
+                                   th:value="${apidetail!=null?apidetail.categoryName:''}"
+                                   autocomplete="off" class="layui-input layui-select-title">
+                            <input type="hidden" name="categoryId" id="categoryTree"
+                                   th:value="${apidetail!=null?apidetail.categoryId:''}">
+                            <input type="hidden" name="categoryName" id="categoryName"
+                                   th:value="${apidetail!=null?apidetail.categoryName:''}">
                         </div>
                     </div>
 
@@ -59,7 +63,9 @@
 
                 <div class="layui-form-item">
                     <div class="editormd" id="test-editormd">
-                        <textarea class="editormd-markdown-textarea" name="context">欢迎使用wwDoc</textarea>
+                        <textarea class="editormd-markdown-textarea" name="context"
+                                  th:text="${apidetail!=null?apidetail.context:'欢迎使用wwDoc'}">
+                        </textarea>
                         <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
                         <!-- <textarea class="editormd-html-textarea" ></textarea>-->
                     </div>
@@ -97,7 +103,7 @@
 
 <script>
 
-    layui.use(['form','table','layer', 'treeSelect'], function () {
+    layui.use(['form', 'table', 'layer', 'treeSelect'], function () {
         const form = layui.form,
             layer = layui.layer,
             $ = layui.jquery,
@@ -128,7 +134,7 @@
         });
 
 
-        treeSelect.render({
+        var tree = treeSelect.render({
             // 选择器
             elem: '#tree',
             // 数据
@@ -144,15 +150,19 @@
                 $("#categoryTree").val(d.current.id);
                 $("#categoryName").val(d.current.name);
             },
-            // 加载完成后的回调函数
             success: function (d) {
-//                选中节点，根据id筛选
-//                treeSelect.checkNode('tree', 3);
+                // 加载完成后的回调函数
+
 //                获取zTree对象，可以调用zTree方法
-//                var treeObj = treeSelect.zTree('tree');
-//                console.log(treeObj);
+                //  console.log(treeObj);
+                var treeObj = treeSelect.zTree('tree');
+
+                if ($("#categoryName").val() != null) {
+                    //  选中节点，根据id筛选
+                    treeSelect.checkNode('tree', $("#categoryTree").val());
+                }
 //                刷新树结构
-//                treeSelect.refresh();
+                //treeSelect.refresh();
             }
         });
 
@@ -193,9 +203,8 @@
                 });
             },
             add_more: function () {
-                table.reload('munu-table', {
-                });
-                 index = layer.open({
+                table.reload('munu-table', {});
+                index = layer.open({
                     title: "查看自定义模板",
                     content: $("#more_table"),
                     type: 1,
@@ -216,7 +225,7 @@
             cols: [
                 [
                     {
-                        title: "保存时间", field: "createTime",width: 180,  align: "center",
+                        title: "保存时间", field: "createTime", width: 180, align: "center",
                         templet: function (d) {
                             if (d.createTime != null) {
                                 return layui.util.toDateString(d.createTime);
@@ -224,8 +233,8 @@
                             return '';
                         }
                     },
-                    {title: "模板标题", field: "title",width: 200, align: "center"},
-                    {title: "操作", templet: '#auth-state',width: 250, align: 'center',}
+                    {title: "模板标题", field: "title", width: 200, align: "center"},
+                    {title: "操作", templet: '#auth-state', width: 250, align: 'center',}
                 ]
             ]
         });
@@ -251,8 +260,7 @@
                                     icon: 6,
                                     time: 1000
                                 }, function () {
-                                    table.reload('munu-table', {
-                                    });
+                                    table.reload('munu-table', {});
                                 });
                             } else {
                                 layer.msg(data.msg, {
@@ -273,7 +281,6 @@
         });
 
 
-
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             const index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
@@ -290,7 +297,7 @@
                             offset: '15px',
                             icon: 6,
                             time: 2000
-                        },function () {
+                        }, function () {
                             window.location.href = '/apidetail/toAPIList';
                         });
                     } else {

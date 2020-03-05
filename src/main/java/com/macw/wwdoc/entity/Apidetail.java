@@ -42,9 +42,9 @@ public class Apidetail implements Serializable {
     private Integer categoryId;
 
     /**
-     * 所属分类id
+     * 所属分类Name
      */
-    private Integer categoryName;
+    private String categoryName;
 
     /**
      * 文章标题
