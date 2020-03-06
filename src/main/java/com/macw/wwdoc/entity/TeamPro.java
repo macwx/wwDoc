@@ -42,6 +42,11 @@ public class TeamPro implements Serializable {
     private Integer projectId;
 
     /**
+     * 项目Name
+     */
+    private String projectName;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;

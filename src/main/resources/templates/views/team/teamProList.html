@@ -1,33 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="views/include :: header('团队信息')"/>
+    <th:block th:include="views/include :: header('项目信息')"/>
 </head>
 <body>
 <div class="layuimini-container">
     <div class="layuimini-main">
         <div style="padding-bottom: 10px;" id="LAY_lay_add">
             <button class="layui-btn layuiadmin-btn-role " data-type="add" id="add">
-                <i class="layui-icon layui-icon-add-circle-fine"></i> 创建团队
+                <i class="layui-icon layui-icon-add-circle-fine"></i> 添加项目
             </button>
-            <div class="layui-input-inline" style="width: 200px;">
-                <input type="text" name="title" id="title" placeholder="请输入团队名称" autocomplete="off"
-                       class="layui-input">
-            </div>
-            <div class="layui-input-inline" style="width: 100px;">
-                <button type="button" class="layui-btn layui-btn-normal" id="btn-search">
-                    <i class="layui-icon layui-icon-search"></i> 搜索
-                </button>
-            </div>
+            <button class="layui-btn layui-btn-warm " data-type="return_team" id="return_team">
+                <i class="layui-icon layui-icon-refresh-1"></i> 返回团队
+            </button>
+
             <table id="munu-table" class="layui-table" lay-filter="munu-table"></table>
+            <input type="hidden" th:value="${teamId}" id="teamId">
         </div>
     </div>
 </div>
 <!-- 操作列 -->
 <script type="text/html" id="auth-state">
-       <a class="layui-btn layui-btn-normal  layui-btn-sm" lay-event="memberNumber"><i class="layui-icon">&#xe770;</i>成员</a>
-       <a class="layui-btn layui-btn-normal  layui-btn-sm" lay-event="proNumber"><i class="layui-icon">&#xe66c;</i>项目</a>
-    <a class="layui-btn layui-btn-danger  layui-btn-sm" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-fluid " lay-event="del"><i class="layui-icon">&#xe640;</i>取消分配</a>
 </script>
 
 
@@ -37,21 +31,13 @@
             layer = layui.layer,
             $ = layui.jquery,
             table = layui.table;
+        var teamId = $("#teamId").val();
 
-        $("#btn-search").click(function () {
-            let title = $("#title").val();
-            table.reload('munu-table', {
-                where: {"title":title},
-                page: {
-                    curr: 1 //重新从第 1 页开始
-                }
-            });
-        });
 
         $("#add").click(function () {
             layer.open({
-                title: "添加团队",
-                content: "/team/toTeamEdit",
+                title: "分配项目给团队",
+                content: "/teamPro/toTeamProAdd?teamId="+teamId,
                 type: 2,
                 maxmin: true,
                 area: ['690px', '500px'],
@@ -62,37 +48,21 @@
             });
         });
 
+        $("#return_team").click(function () {
+           window.location.href = '/team/toTeamList';
+        });
+
         let tab_tab = table.render({
             elem: '#munu-table',
-            url: '/team/listTeam', //数据接口
+            url: '/teamPro/listTeamPro?teamId='+teamId, //数据接口
             page: true,
             limit: 10,
             limits: [10, 20, 30],
             cols: [
                 [
-                    {title: "团队名称", field: "teamName",edit: 'text',align: "center"},
-                    {title: "团队成员数量", field: "memberNumber", align: "center",
-                        templet:function (d) {
-                            return '<button type="button" class="layui-btn  layui-btn-normal layui-btn-fluid"  lay-event="memberNumber">'+d.memberNumber+'</button>';
-                        }
-                    },
-                    {title: "分配项目数量", field: "proNumber",align: "center",
-                        templet:function (d) {
-                            return '<button type="button" class="layui-btn  layui-btn-normal layui-btn-fluid"  lay-event="proNumber">'+d.proNumber+'</button>';
-                        }
-                    },
-                    {title: "创建/更新者", field: "createUser", align: "center",width:100,
-                        templet: function (d) {
-                            if (d.updateUser != null) {
-                                return d.updateUser;
-                            }else if (d.createUser != null) {
-                                return d.createUser;
-                            }
-                            return '';
-                        }
-                    },
+                    {title: "项目", field: "projectName",align: "center"},
                     {
-                        title: "创建/更新时间", field: "createTime",width: 180,  align: "center",
+                        title: "加入时间", field: "createTime",  align: "center",
                         templet: function (d) {
                             if (d.updateTime != null) {
                                 return layui.util.toDateString(d.updateTime);
@@ -102,8 +72,13 @@
                             return '';
                         }
                     },
-                    {title: "团队介绍", field: "remark",edit: 'text', align: "center"},
-                    {title: "操作", templet: '#auth-state',width: 250, align: 'center',}
+                    {title: "查看项目", field: "proNumber",align: "center",
+                        templet:function (d) {
+                            return '<button type="button" class="layui-btn  layui-btn-normal layui-btn-fluid"  lay-event="pro"><i class="layui-icon">&#xe66c;</i>查看项目</button>';
+                        }
+                    },
+
+                    {title: "操作", templet: '#auth-state', align: 'center',}
                 ]
             ]
         });
@@ -114,10 +89,10 @@
             var data = obj.data;
             var layEvent = obj.event;
             if (layEvent === 'del') {
-                layer.confirm('确认删除此团队吗？', function (index) {
+                layer.confirm('确认取消分配此项目吗？', function (index) {
                     $.ajax({
-                        url: '/team/deleteOne',
-                        data: {"teamId":data.teamId},
+                        url: '/teamPro/deleteOne',
+                        data: {"teamProId":data.teamProId},
                         type: 'post',
                         dataType: 'json',
                         success: function (data) {
@@ -141,10 +116,8 @@
                         }
                     });
                 });
-            }else if (layEvent === 'memberNumber'){
-                window.location.href = "/teamMember/toTeamMemList?teamId="+data.teamId;
-            }else if (layEvent === 'proNumber'){
-                window.location.href = "/teamPro/toTeamPro?teamId="+data.teamId;
+            }else if(layEvent === 'pro'){
+                top.window.location = "/project/toDocs?proId=" + data.teamProId;
             }
         });
 

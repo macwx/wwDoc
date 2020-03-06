@@ -8,11 +8,15 @@
     <div class="layuimini-main">
         <div class="layui-form layuimini-form">
             <div class="layui-form-item">
-                <label class="layui-form-label required">用户名</label>
+                <label class="layui-form-label required">选择项目</label>
                 <div class="layui-input-block">
-                    <input type="text" name="userName" id="userName" placeholder="请输入成员用户名" autocomplete="off"
-                           class="layui-input">
-                    <tip>*填写所要添加用户的登录账户</tip>
+                    <select name="projectId" lay-verify="required">
+                        <option value="">选择项目</option>
+                        <div th:each="project:${projectList}">
+                            <option th:value="${project.proId}"><div th:text="${project.proName}"></div></option>
+                        </div>
+                    </select>
+                    <tip>*请选择所要添加的项目</tip>
                 </div>
                 <input type="hidden" th:value="${teamId}" th:name="teamId" id="teamId">
             </div>
@@ -36,7 +40,7 @@
             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
 
             $.ajax({
-                url: "/teamMember/addTeamMember",
+                url: "/teamPro/teamProAdd",
                 data: data.field,
                 type: "post",
                 //4.接收后台修改响应回来的数据；关闭弹出层、提示修改信息、刷新table

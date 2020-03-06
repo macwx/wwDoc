@@ -10,15 +10,6 @@
             <button class="layui-btn layuiadmin-btn-role " data-type="add" id="add">
                 <i class="layui-icon layui-icon-add-circle-fine"></i> 创建成员
             </button>
-            <div class="layui-input-inline" style="width: 200px;">
-                <input type="text" name="title" id="title" placeholder="请输入团队名称" autocomplete="off"
-                       class="layui-input">
-            </div>
-            <div class="layui-input-inline" style="width: 100px;">
-                <button type="button" class="layui-btn layui-btn-normal" id="btn-search">
-                    <i class="layui-icon layui-icon-search"></i> 搜索
-                </button>
-            </div>
 
             <button class="layui-btn layui-btn-warm " data-type="return_team" id="return_team">
                 <i class="layui-icon layui-icon-refresh-1"></i> 返回团队
@@ -43,15 +34,6 @@
             table = layui.table;
         var teamId = $("#teamId").val();
 
-        $("#btn-search").click(function () {
-            let title = $("#title").val();
-            table.reload('munu-table', {
-                where: {"title":title},
-                page: {
-                    curr: 1 //重新从第 1 页开始
-                }
-            });
-        });
 
         $("#add").click(function () {
             layer.open({
@@ -59,7 +41,7 @@
                 content: "/teamMember/toAddTM?teamId="+teamId,
                 type: 2,
                 maxmin: true,
-                area: ['690px', '500px'],
+                area: ['690px', '300px'],
                 maxmin: true,
                 end: function () {
                     window.location.reload();
