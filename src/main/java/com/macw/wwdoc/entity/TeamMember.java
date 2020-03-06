@@ -59,6 +59,11 @@ public class TeamMember implements Serializable {
     private LocalDateTime createTime;
 
     /**
+     * 权限 1，编辑， 0只读
+     */
+    private Integer isEdit;
+
+    /**
      * 更新时间
      */
     private LocalDateTime updateTime;

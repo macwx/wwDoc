@@ -247,7 +247,6 @@
 
             if (layEvent === 'del') {
                 layer.confirm('确认删除此模板吗？', function (index) {
-
                     $.ajax({
                         url: '/template/deleteOne',
                         data: {"tempId": data.templateId},

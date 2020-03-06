@@ -127,20 +127,10 @@
             },
             pro_name: function () {
                 var ss = $(this).next().val();
-                window.location = "/project/toDocs?proId=" + ss;
+                window.location.href = "/project/toDocs?proId=" + ss;
             },
             num_set: function () {
-                layer.open({
-                    title: "团队成员",
-                    content: "/project/toEdit",
-                    type: 2,
-                    maxmin: true,
-                    area: ['690px', '500px'],
-                    maxmin: true,
-                    end: function () {
-                        window.location.reload();
-                    }
-                });
+                window.location.href = "/team/toTeamList";
             }
         };
 

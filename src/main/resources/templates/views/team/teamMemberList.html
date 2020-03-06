@@ -22,7 +22,7 @@
 </div>
 <!-- 操作列 -->
 <script type="text/html" id="auth-state">
-    <a class="layui-btn layui-btn-danger layui-btn-fluid  layui-btn-sm" lay-event="del"><i class="layui-icon">&#xe640;</i>删除此成员</a>
+    <a class="layui-btn layui-btn-danger layui-btn-fluid " lay-event="del"><i class="layui-icon">&#xe640;</i>删除此成员</a>
 </script>
 
 
@@ -63,9 +63,8 @@
                 [
                     {title: "用户名", field: "userName",align: "center"},
                     {title: "用户昵称", field: "nickname",align: "center"},
-
                     {
-                        title: "加入时间", field: "createTime",width: 180,  align: "center",
+                        title: "加入时间", field: "createTime",  align: "center",
                         templet: function (d) {
                             if (d.updateTime != null) {
                                 return layui.util.toDateString(d.updateTime);
@@ -75,7 +74,18 @@
                             return '';
                         }
                     },
-                    {title: "操作", templet: '#auth-state',width:200, align: 'center',}
+                    {title: "权限", align:"center",
+                        templet: function(d){
+                            if(d.isEdit == 1){
+                                return '<button type="button" class="layui-btn  layui-btn-fluid  layui-btn-normal"  lay-event="yn">编辑</button>';
+                            }else if(d.isEdit == 0){
+                                return '<button type="button" class="layui-btn  layui-btn-fluid"  lay-event="yn">只读</button>';
+                            }else{
+                                return '';
+                            }
+                        }
+                    },
+                    {title: "操作", templet: '#auth-state', align: 'center',}
                 ]
             ]
         });
@@ -112,6 +122,41 @@
                             layer.msg("操作失败", {time: 1000, icon: 5});
                         }
                     });
+                });
+            }else if (layEvent === 'yn') {
+                var str = "编辑";
+                var status = 1;
+                if(data.isEdit == 1){
+                    str = "只读";
+                    status = 0;
+                }
+                layer.confirm('确认要将这个用户权限设为['+str+']吗?', function(index){
+                    $.ajax({
+                        url: 'teamMember/teamMemberEdit',
+                        data: {"teamMemberId":data.teamMemberId,"isEdit":status},
+                        type: 'post',
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.code === 0) {
+                                layer.msg(data.msg, {
+                                    offset: '15px',
+                                    icon: 6,
+                                    time: 1000
+                                }, function () {
+                                    table.reload('munu-table', {
+                                    });
+                                });
+                            } else {
+                                layer.msg(data.msg, {
+                                    icon: 5,
+                                    time: 2000
+                                });
+                            }
+                        }, error: function (data) {
+                            layer.msg("操作失败", {time: 1000, icon: 5});
+                        }
+                    });
+                    layer.close(index);
                 });
             }
         });

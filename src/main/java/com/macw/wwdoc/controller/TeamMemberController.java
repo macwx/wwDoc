@@ -88,6 +88,11 @@ public class TeamMemberController extends BaseController{
         return ResultUtil.flag(iTeamMemberService.save(teamMember));
     }
 
+    @RequestMapping("/teamMemberEdit")
+    public ResultUtil teamMemberEdit(TeamMember teamMember){
+        return ResultUtil.flag(iTeamMemberService.updateById(teamMember));
+    }
+
     @RequestMapping("/deleteOne")
     public ResultUtil deleteOne(Integer teamMemberId){
         return ResultUtil.flag(iTeamMemberService.removeById(teamMemberId));
