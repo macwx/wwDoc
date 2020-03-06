@@ -107,6 +107,11 @@ public class Apidetail implements Serializable {
     private String context;
 
     /**
+     * 文章内容HTML
+     */
+    private String contextHtml;
+
+    /**
      * 文章备注
      */
     private String remark;
