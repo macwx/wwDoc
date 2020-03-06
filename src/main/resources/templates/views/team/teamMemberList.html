@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="views/include :: header('团队信息')"/>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div style="padding-bottom: 10px;" id="LAY_lay_add">
+            <button class="layui-btn layuiadmin-btn-role " data-type="add" id="add">
+                <i class="layui-icon layui-icon-add-circle-fine"></i> 创建成员
+            </button>
+            <div class="layui-input-inline" style="width: 200px;">
+                <input type="text" name="title" id="title" placeholder="请输入团队名称" autocomplete="off"
+                       class="layui-input">
+            </div>
+            <div class="layui-input-inline" style="width: 100px;">
+                <button type="button" class="layui-btn layui-btn-normal" id="btn-search">
+                    <i class="layui-icon layui-icon-search"></i> 搜索
+                </button>
+            </div>
+
+            <button class="layui-btn layui-btn-warm " data-type="return_team" id="return_team">
+                <i class="layui-icon layui-icon-refresh-1"></i> 返回团队
+            </button>
+
+            <table id="munu-table" class="layui-table" lay-filter="munu-table"></table>
+            <input type="hidden" th:value="${teamId}" id="teamId">
+        </div>
+    </div>
+</div>
+<!-- 操作列 -->
+<script type="text/html" id="auth-state">
+    <a class="layui-btn layui-btn-danger layui-btn-fluid  layui-btn-sm" lay-event="del"><i class="layui-icon">&#xe640;</i>删除此成员</a>
+</script>
+
+
+<script type="text/javascript">
+    layui.use(['form','table','layer'], function () {
+        const form = layui.form,
+            layer = layui.layer,
+            $ = layui.jquery,
+            table = layui.table;
+        var teamId = $("#teamId").val();
+
+        $("#btn-search").click(function () {
+            let title = $("#title").val();
+            table.reload('munu-table', {
+                where: {"title":title},
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        });
+
+        $("#add").click(function () {
+            layer.open({
+                title: "添加成员",
+                content: "/teamMember/toAddTM?teamId="+teamId,
+                type: 2,
+                maxmin: true,
+                area: ['690px', '500px'],
+                maxmin: true,
+                end: function () {
+                    window.location.reload();
+                }
+            });
+        });
+
+        $("#return_team").click(function () {
+           window.location.href = '/team/toTeamList';
+        });
+
+        let tab_tab = table.render({
+            elem: '#munu-table',
+            url: '/teamMember/listTeamMember?teamId='+teamId, //数据接口
+            page: true,
+            limit: 10,
+            limits: [10, 20, 30],
+            cols: [
+                [
+                    {title: "用户名", field: "userName",align: "center"},
+                    {title: "用户昵称", field: "nickname",align: "center"},
+
+                    {
+                        title: "加入时间", field: "createTime",width: 180,  align: "center",
+                        templet: function (d) {
+                            if (d.updateTime != null) {
+                                return layui.util.toDateString(d.updateTime);
+                            }else if (d.createTime != null) {
+                                return layui.util.toDateString(d.createTime);
+                            }
+                            return '';
+                        }
+                    },
+                    {title: "操作", templet: '#auth-state',width:200, align: 'center',}
+                ]
+            ]
+        });
+
+
+        //监听工具条
+        table.on('tool(munu-table)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'del') {
+                layer.confirm('确认删除此成员吗？', function (index) {
+                    $.ajax({
+                        url: '/teamMember/deleteOne',
+                        data: {"teamMemberId":data.teamMemberId},
+                        type: 'post',
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.code === 0) {
+                                layer.msg(data.msg, {
+                                    offset: '15px',
+                                    icon: 6,
+                                    time: 1000
+                                }, function () {
+                                    table.reload('munu-table', {
+                                    });
+                                });
+                            } else {
+                                layer.msg(data.msg, {
+                                    icon: 5,
+                                    time: 2000
+                                });
+                            }
+                        }, error: function (data) {
+                            layer.msg("操作失败", {time: 1000, icon: 5});
+                        }
+                    });
+                });
+            }
+        });
+
+        //监听单元格编辑
+        table.on('edit(munu-table)', function(obj){
+            var value = obj.value //得到修改后的值
+                ,data = obj.data //得到所在行所有键值
+                ,field = obj.field; //得到字段
+            $.ajax({
+                url: '/team/editTeam?'+field+"="+value,
+                data: {"teamId":data.teamId},
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code == 0) {
+                        layer.msg(data.msg, {
+                            offset: '15px',
+                            icon: 6,
+                            time: 1000
+                        }, function () {
+                            /* table.reload('munu-table', {
+                             });*/
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 2000
+                        });
+                    }
+                }, error: function (data) {
+                    layer.msg("操作失败", {time: 1000, icon: 5});
+                }
+
+            });
+            layer.msg('[ID: '+ data.configId +'] ' + field + ' 字段更改为：'+ value);
+        });
+
+        $('.layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+
+</script>
+</body>
+</html>

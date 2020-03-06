@@ -1,5 +1,6 @@
 package com.macw.wwdoc.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -45,6 +46,12 @@ public class TeamMember implements Serializable {
      * 成员name
      */
     private String userName;
+
+    /**
+     * 用户昵称
+     */
+    private String nickname;
+
 
     /**
      * 创建时间

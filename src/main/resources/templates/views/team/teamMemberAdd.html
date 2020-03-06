@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="views/include :: header('添加成员')"/>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="userName" id="userName" placeholder="请输入用户名" autocomplete="off"
+                           class="layui-input">
+                    <tip>*填写所要添加用户的登录账户</tip>
+                </div>
+                <input type="hidden" th:value="${teamId}" th:name="teamId" id="teamId">
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.jquery;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+
+            $.ajax({
+                url: "/teamMember/addTeamMember",
+                data: data.field,
+                type: "post",
+                //4.接收后台修改响应回来的数据；关闭弹出层、提示修改信息、刷新table
+                success: function (data) {
+                    if (data.code == 0) {
+                        layer.msg(data.msg, {
+                            offset: '15px',
+                            icon: 6,
+                            time: 2000
+                        }, function () {
+                            parent.layer.close(index);
+                            parent.location.reload();
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 2000
+                        });
+                    }
+                    //确认框关闭掉
+                    layer.close(index);
+                }
+            });
+            return false;//阻止跳转；
+        });
+    });
+</script>
+</body>
+</html>
