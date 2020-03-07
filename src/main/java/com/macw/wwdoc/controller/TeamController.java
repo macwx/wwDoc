@@ -4,6 +4,7 @@ package com.macw.wwdoc.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.macw.wwdoc.Constant;
+import com.macw.wwdoc.config.Log;
 import com.macw.wwdoc.entity.Team;
 import com.macw.wwdoc.entity.TeamMember;
 import com.macw.wwdoc.entity.TeamPro;
@@ -80,6 +81,7 @@ public class TeamController extends BaseController {
         return success;
     }
 
+    @Log(value = "添加/更新团队信息",type = "add")
     @RequestMapping("/editTeam")
     public ResultUtil editTeam(Team team) {
         User user = getUser();
@@ -93,6 +95,7 @@ public class TeamController extends BaseController {
         }
     }
 
+    @Log(value = "删除团队",type = "del")
     @RequestMapping("/deleteOne")
     public ResultUtil deleteOne(Integer teamId) {
         boolean remove = iTeamProService.remove(new QueryWrapper<TeamPro>().lambda().eq(TeamPro::getTeamId, teamId));

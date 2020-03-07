@@ -2,6 +2,7 @@ package com.macw.wwdoc.controller;
 
 
 import com.macw.wwdoc.Constant;
+import com.macw.wwdoc.config.Log;
 import com.macw.wwdoc.entity.Project;
 import com.macw.wwdoc.entity.User;
 import com.macw.wwdoc.service.IProjectService;
@@ -58,6 +59,7 @@ public class ProjectController extends BaseController {
     }
 
 
+    @Log(value = "添加/更新项目",type = "add")
     @RequestMapping("/addOrUpdate")
     public ResultUtil addOrUpdate(Project project){
         User user = getUser();
@@ -78,6 +80,7 @@ public class ProjectController extends BaseController {
         }
     }
 
+    @Log(value = "删除项目",type = "del")
     @RequestMapping("/deleteOne")
     public ResultUtil deleteOne(Integer proId){
         return ResultUtil.flag( iProjectService.removeById(proId));

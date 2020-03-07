@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.macw.wwdoc.Constant;
+import com.macw.wwdoc.config.Log;
 import com.macw.wwdoc.entity.Template;
 import com.macw.wwdoc.entity.User;
 import com.macw.wwdoc.service.ITemplateService;
@@ -41,6 +42,7 @@ public class TemplateController extends BaseController {
      * @param template
      * @return
      */
+    @Log(value = "创建模板",type = "add")
     @RequestMapping("/addTemplate")
     public ResultUtil addTemplate(Template template){
         User user = getUser();
@@ -80,6 +82,7 @@ public class TemplateController extends BaseController {
         return success;
     }
 
+    @Log(value = "删除模板",type = "del")
     @RequestMapping("/deleteOne")
     public ResultUtil deleteOne(Integer tempId){
         return ResultUtil.flag(iTemplateService.removeById(tempId));

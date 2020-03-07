@@ -5,9 +5,12 @@ import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.CircleCaptcha;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.macw.wwdoc.Constant;
+import com.macw.wwdoc.entity.Log;
 import com.macw.wwdoc.entity.User;
+import com.macw.wwdoc.service.ILogService;
 import com.macw.wwdoc.service.IUserService;
 import com.macw.wwdoc.util.DigestUtils;
+import com.macw.wwdoc.util.IpAddressUtil;
 import com.macw.wwdoc.util.ResultUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -26,6 +29,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -43,6 +47,9 @@ public class UserController extends BaseController {
 
     @Resource
     private IUserService iUserService;
+
+    @Resource
+    private ILogService iLogService;
 
     @RequestMapping("/toRegister")
     public ModelAndView toRegister() {
@@ -85,6 +92,13 @@ public class UserController extends BaseController {
                     .eq(User::getPassword, password)
                     .eq(User::getState, Constant.ENABLE));
             subject.getSession().setAttribute(Constant.LOGIN_USER, user);
+            Log log = new Log();
+            log.setLogType("select");
+            log.setLogIp(IpAddressUtil.getIp());
+            log.setLogDate(LocalDateTime.now());
+            log.setLogUserId(user.getUserId());
+            log.setLogContent("登录");
+            iLogService.save(log);
             return ResultUtil.ok(Constant.LOGIN_SUCCESS_MSG);
         } catch (Exception e) {
             // 有异常说明登录失败，
@@ -95,6 +109,7 @@ public class UserController extends BaseController {
         }
     }
 
+    @com.macw.wwdoc.config.Log(value = "退出登录",type = "exit")
     @RequestMapping("/loginLou")
     public ResultUtil loginLou(){
         try {

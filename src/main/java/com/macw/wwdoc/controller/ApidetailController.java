@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.macw.wwdoc.Constant;
+import com.macw.wwdoc.config.Log;
 import com.macw.wwdoc.entity.Apidetail;
 import com.macw.wwdoc.entity.User;
 import com.macw.wwdoc.entity.vo.TreeSelectVo;
@@ -52,6 +53,7 @@ public class ApidetailController extends BaseController {
      * @param apiId
      * @return
      */
+
     @RequestMapping("/toApiAdd")
     public ModelAndView toApiAdd(Integer apiId) {
         ModelAndView mv = new ModelAndView(thyme + "/docs/apis/apiAdd");
@@ -68,6 +70,7 @@ public class ApidetailController extends BaseController {
      * @param apidetail
      * @return
      */
+    @Log(value = "添加API",type = "add")
     @RequestMapping("/addApi")
     public ResultUtil addApi(Apidetail apidetail) {
         User user = getUser();
@@ -160,6 +163,7 @@ public class ApidetailController extends BaseController {
      * @param apiId
      * @return
      */
+    @Log(value = "删除API",type = "del")
     @RequestMapping("/deleteOne")
     public ResultUtil deleteOne(Integer apiId){
         return ResultUtil.flag(iApidetailService.removeById(apiId));

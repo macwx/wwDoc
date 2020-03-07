@@ -3,6 +3,7 @@ package com.macw.wwdoc.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.macw.wwdoc.config.Log;
 import com.macw.wwdoc.entity.Category;
 import com.macw.wwdoc.entity.User;
 import com.macw.wwdoc.service.ICategoryService;
@@ -65,6 +66,7 @@ public class CategoryController extends BaseController {
         return mv;
     }
 
+    @Log(value = "添加/更新分类",type = "add")
     @RequestMapping("/addCategory")
     public ResultUtil addCategory(Category category, Integer parentIds, Integer cids) {
         User user = getUser();
@@ -87,6 +89,7 @@ public class CategoryController extends BaseController {
         }
     }
 
+    @Log(value = "删除分类",type = "del")
     @RequestMapping("/deleteCategory")
     public ResultUtil deleteCategory(Integer categoryId) {
         List<Integer> list = new ArrayList<>();

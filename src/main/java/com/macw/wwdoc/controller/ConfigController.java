@@ -4,6 +4,7 @@ package com.macw.wwdoc.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.macw.wwdoc.Constant;
+import com.macw.wwdoc.config.Log;
 import com.macw.wwdoc.entity.Config;
 import com.macw.wwdoc.entity.User;
 import com.macw.wwdoc.service.IConfigService;
@@ -62,6 +63,7 @@ public class ConfigController extends BaseController {
         return success;
     }
 
+    @Log(value = "添加/更新配置",type = "add")
     @RequestMapping("/saveOrUpdate")
     public ResultUtil saveOrUpdate(Config config){
         logger.debug("config---="+config);
@@ -77,6 +79,7 @@ public class ConfigController extends BaseController {
         }
     }
 
+    @Log(value = "删除配置",type = "del")
     @RequestMapping("/deleteOne")
     public ResultUtil deleteOne(Integer configId){
         return ResultUtil.flag(iConfigService.removeById(configId));

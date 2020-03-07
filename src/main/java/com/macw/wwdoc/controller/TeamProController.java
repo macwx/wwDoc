@@ -4,6 +4,7 @@ package com.macw.wwdoc.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.macw.wwdoc.Constant;
+import com.macw.wwdoc.config.Log;
 import com.macw.wwdoc.entity.Project;
 import com.macw.wwdoc.entity.TeamPro;
 import com.macw.wwdoc.entity.User;
@@ -76,6 +77,7 @@ public class TeamProController extends BaseController {
         return mv;
     }
 
+    @Log(value = "添加团队项目",type = "add")
     @RequestMapping("/teamProAdd")
     public ResultUtil teamProAdd(TeamPro teamPro){
         teamPro.setCreateTime(LocalDateTime.now());
@@ -90,6 +92,7 @@ public class TeamProController extends BaseController {
         return ResultUtil.flag(iTeamProService.save(teamPro));
     }
 
+    @Log(value = "删除团队项目",type = "del")
     @RequestMapping("/deleteOne")
     public ResultUtil deleteOne(Integer teamProId){
         return ResultUtil.flag(iTeamProService.removeById(teamProId));

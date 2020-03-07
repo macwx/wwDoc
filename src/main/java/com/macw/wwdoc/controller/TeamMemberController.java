@@ -4,6 +4,7 @@ package com.macw.wwdoc.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.macw.wwdoc.Constant;
+import com.macw.wwdoc.config.Log;
 import com.macw.wwdoc.entity.TeamMember;
 import com.macw.wwdoc.entity.User;
 import com.macw.wwdoc.service.ITeamMemberService;
@@ -63,6 +64,7 @@ public class TeamMemberController extends BaseController{
         return success;
     }
 
+
     @RequestMapping("/toAddTM")
     public ModelAndView toAddTM(Integer teamId){
         ModelAndView mv = new ModelAndView(thyme + "/team/teamMemberAdd");
@@ -70,6 +72,7 @@ public class TeamMemberController extends BaseController{
         return mv;
     }
 
+    @Log(value = "添加团队成员",type = "add")
     @RequestMapping("/addTeamMember")
     public ResultUtil addTeamMember(TeamMember teamMember){
         teamMember.setCreateTime(LocalDateTime.now());
@@ -88,11 +91,13 @@ public class TeamMemberController extends BaseController{
         return ResultUtil.flag(iTeamMemberService.save(teamMember));
     }
 
+    @Log(value = "更新团队成员",type = "update")
     @RequestMapping("/teamMemberEdit")
     public ResultUtil teamMemberEdit(TeamMember teamMember){
         return ResultUtil.flag(iTeamMemberService.updateById(teamMember));
     }
 
+    @Log(value = "删除团队成员",type = "del")
     @RequestMapping("/deleteOne")
     public ResultUtil deleteOne(Integer teamMemberId){
         return ResultUtil.flag(iTeamMemberService.removeById(teamMemberId));
