@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="views/include :: header('帮助列表')"/>
+    <style type="text/css">
+        .layui-table-cell {
+            height: auto;
+            line-height: 30px;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div style="padding-bottom: 10px;" id="LAY_lay_add">
+            <button class="layui-btn layuiadmin-btn-role " data-type="add" id="add">
+                <i class="layui-icon layui-icon-add-circle-fine"></i> 添加帮助
+            </button>
+            <div class="layui-input-inline" style="width: 200px;">
+                <input type="text" name="title" id="title" placeholder="请输入帮助标题" autocomplete="off"
+                       class="layui-input">
+            </div>
+            <div class="layui-input-inline" style="width: 100px;">
+                <button type="button" class="layui-btn layui-btn-normal" id="btn-search">
+                    <i class="layui-icon layui-icon-search"></i> 搜索
+                </button>
+            </div>
+            <table id="munu-table" class="layui-table" lay-filter="munu-table"></table>
+        </div>
+    </div>
+</div>
+<!-- 操作列 -->
+<script type="text/html" id="auth-state">
+ <!--   <a class="layui-btn  layui-btn-sm" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑/预览</a>-->
+    <a class="layui-btn layui-btn-danger  layui-btn-sm" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+
+<script type="text/javascript">
+
+    layui.use(['form','table','layer'], function () {
+        const form = layui.form,
+            layer = layui.layer,
+            $ = layui.jquery,
+            table = layui.table;
+
+        $("#btn-search").click(function () {
+            let title = $("#title").val();
+            table.reload('munu-table', {
+                where: {"title":title},
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        });
+
+        $("#add").click(function () {
+            window.location.href = '/help/toHelpEdit';
+        });
+
+        let tab_tab = table.render({
+            elem: '#munu-table',
+            url: '/help/listHelp', //数据接口
+            page: true,
+            limit: 5,
+            limits: [5,10, 20, 30],
+            cols: [
+                [
+                    {title: "标题", field: "title",align: "center"},
+                    {title: "内容", field: "content",align: "center",
+                        templet:function (d) {
+                            return '<button type="button" class="layui-btn   layui-btn-fluid"  lay-event="detail">内容详情</button>';
+                        }
+                    },
+                    {title: "创建人", field: "createName", align: "center"},
+                    {
+                        title: "创建/更新时间", field: "createTime",  align: "center",
+                        templet: function (d) {
+                            if (d.updateTime != null) {
+                                return layui.util.toDateString(d.updateTime);
+                            }else if (d.createTime != null) {
+                                return layui.util.toDateString(d.createTime);
+                            }
+                            return '';
+                        }
+                    },
+                    {title: "操作", templet: '#auth-state',width: 100, align: 'center',}
+                ]
+            ]
+        });
+
+
+        //监听工具条
+        table.on('tool(munu-table)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'del') {
+                layer.confirm('确认删除此帮助吗？', function (index) {
+                    $.ajax({
+                        url: '/help/deleteOne',
+                        data: {"helpId":data.helpId},
+                        type: 'post',
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.code == 0) {
+                                layer.msg(data.msg, {
+                                    offset: '15px',
+                                    icon: 6,
+                                    time: 1000
+                                }, function () {
+                                    table.reload('munu-table', {
+                                    });
+                                });
+                            } else {
+                                layer.msg(data.msg, {
+                                    icon: 5,
+                                    time: 2000
+                                });
+                            }
+                        }, error: function (data) {
+                            layer.msg("操作失败", {time: 1000, icon: 5});
+                        }
+                    });
+                });
+            }else  if (layEvent === 'detail'){
+                window.location.href = '/help/toHelpInfo?helpId='+data.helpId;
+            }
+        });
+
+        //监听单元格编辑
+        table.on('edit(munu-table)', function(obj){
+            var value = obj.value //得到修改后的值
+                ,data = obj.data //得到所在行所有键值
+                ,field = obj.field; //得到字段
+            $.ajax({
+                url: '/config/saveOrUpdate?'+field+"="+value,
+                data: {"configId":data.configId},
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code == 0) {
+                        layer.msg(data.msg, {
+                            offset: '15px',
+                            icon: 6,
+                            time: 1000
+                        }, function () {
+                           /* table.reload('munu-table', {
+                            });*/
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 2000
+                        });
+                    }
+                }, error: function (data) {
+                    layer.msg("操作失败", {time: 1000, icon: 5});
+                }
+
+            });
+            layer.msg('[ID: '+ data.configId +'] ' + field + ' 字段更改为：'+ value);
+        });
+
+        $('.layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+
+
+</script>
+
+</body>
+</html>

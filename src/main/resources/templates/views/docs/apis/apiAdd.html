@@ -3,8 +3,8 @@
 <head>
     <th:block th:include="views/include :: header('添加Api')"/>
     <meta name="toTop" content="true">
-    <link rel="stylesheet" th:href="@{/editormd/css/editormd.css}"/>
-    <script th:src="@{/editormd/editormd.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/plugins/editormd/css/editormd.css}"/>
+    <script th:src="@{/plugins/editormd/editormd.min.js}"></script>
     <script th:src="@{/js/toTop.js}"></script>
 </head>
 <body>
@@ -118,7 +118,7 @@
                 syncScrolling: "single",
                 tex: true, // 开启科学公式TeX语言支持，默认关闭
                 flowChart: true, // 开启流程图支持，默认关闭
-                path: "/editormd/lib/",
+                path: "/plugins/editormd/lib/",
                 tocm: true, // Using [TOCM]
                 saveHTMLToTextarea: true,   //这个配置在simple.html中并没有，但是为了能够提交表单，使用这个配置可以让构造出来的HTML代码直接在第二个隐藏的textarea域中，方便post提交表单。
                 /* 上传图片配置 */
@@ -159,7 +159,7 @@
 
                 if ($("#categoryName").val() != null) {
                     //  选中节点，根据id筛选
-                    treeSelect.checkNode('tree', $("#categoryTree").val());
+                   // treeSelect.checkNode('tree', $("#categoryTree").val());
                 }
 //                刷新树结构
                 //treeSelect.refresh();

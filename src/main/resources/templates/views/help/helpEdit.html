@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="views/include :: header('系统配置')"/>
+    <!-- 注意， 只需要引用 JS，无需引用任何 CSS ！！！-->
+    <script th:src="@{/plugins/wangEditor/release/wangEditor.min.js}"></script>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">标题</label>
+                <div class="layui-input-block">
+                    <input type="text" th:name="title" lay-verify="required" lay-reqtext="标题不能为空"
+                           placeholder="请输入标题名称" th:value="${help!=null ? help.title:''}" class="layui-input">
+                </div>
+            </div>
+            <input type="hidden" name="helpId" id="helpId" th:value="${help!=null ? help.helpId:''}" >
+            <input type="hidden" name="content" id="content" value="">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">帮助详情</label>
+                <div class="layui-input-block">
+                    <div id="editor">
+                        <div th:utext="${help!=null ? help.content:'请输入内容...'}"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.jquery;
+
+        var E = window.wangEditor;
+        var editor = new E('#editor');
+        // 或者 var editor = new E( document.getElementById('editor') )
+        // 自定义菜单配置
+        editor.customConfig.menus = [
+            'head',  // 标题
+            'bold',  // 粗体
+            'fontSize',  // 字号
+            'fontName',  // 字体
+            'italic',  // 斜体
+            'underline',  // 下划线
+            'strikeThrough',  // 删除线
+            'foreColor',  // 文字颜色
+            'backColor',  // 背景颜色
+            'link',  // 插入链接
+            'list',  // 列表
+            'justify',  // 对齐方式
+            'quote',  // 引用
+            'emoticon',  // 表情
+            'table',  // 表格
+            'code',  // 插入代码
+            'undo',  // 撤销
+            'redo'  // 重复
+        ];
+        editor.create();
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            // $("#content").val(editor.txt.text());
+            var ss =editor.txt.html();
+            $("#content").val(ss);
+            // $("#contentHtml").val(editor.txt.html());
+            $.ajax({
+                url: "/help/helpEdit?content="+editor.txt.html(),
+                data: data.field,
+                type: "post",
+                //4.接收后台修改响应回来的数据；关闭弹出层、提示修改信息、刷新table
+                success: function (data) {
+                    if (data.code == 0) {
+                        layer.msg(data.msg, {
+                            offset: '15px',
+                            icon: 6,
+                            time: 2000
+                        }, function () {
+                            window.location.href = '/help/toHelp';
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 2000
+                        });
+                    }
+                    //确认框关闭掉
+                    layer.close(index);
+                }
+            });
+            return false;//阻止跳转；
+        });
+    });
+</script>
+</body>
+</html>

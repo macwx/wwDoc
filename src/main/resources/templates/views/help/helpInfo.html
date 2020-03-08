@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="views/include :: header('帮助详情')"/>
+</head>
+<body>
+<div class="layuimini-container" style="text-align: center;margin: 0px 100px 0px 100px;width: 80%" th:object="${help}">
+    <div class="layuimini-main">
+        <div class="layui-input-inline" style="width: 300px;float: right">
+            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="re_turn">
+                <i class="layui-icon layui-icon-refresh-1"></i> 返回列表
+            </button>
+            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="btn-edit">
+                <i class="layui-icon layui-icon-edit"></i> 编辑
+            </button>
+        </div>
+        <div class="layui-form-item">
+            <h1 th:text="*{title}"></h1>
+            <input type="hidden" id="helpId" th:value="*{helpId}">
+        </div>
+        <div class="layui-form-item" style="padding: 20px">
+            <h5 th:text="*{createName}"></h5>
+            <h5 th:text="*{time}" style="padding: 10px"></h5>
+        </div>
+        <div class="layui-form-item">
+            <div th:utext="*{content}" style="float: left"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#re_turn").click(function () {
+        window.location.href = '/help/toHelp';
+    });
+    $("#btn-edit").click(function () {
+        window.location.href = '/help/toHelpEdit?helpId=' + $("#helpId").val();    })
+
+</script>
+
+</body>
+</html>

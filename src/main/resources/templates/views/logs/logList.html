@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="views/include :: header('日志信息')"/>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div style="padding-bottom: 10px;" id="LAY_lay_add">
+            <div class="layui-input-inline" style="width: 200px;">
+                <input type="text" name="title" id="title" placeholder="请输入日志内容或者类型" autocomplete="off"
+                       class="layui-input">
+            </div>
+            <div class="layui-input-inline" style="width: 100px;">
+                <button type="button" class="layui-btn layui-btn-normal" id="btn-search">
+                    <i class="layui-icon layui-icon-search"></i> 搜索
+                </button>
+            </div>
+            <table id="munu-table" class="layui-table" lay-filter="munu-table"></table>
+        </div>
+    </div>
+</div>
+<!-- 操作列 -->
+<script type="text/html" id="auth-state">
+    <!--   <a class="layui-btn  layui-btn-sm" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑/预览</a>-->
+    <a class="layui-btn layui-btn-danger  layui-btn-sm" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+
+<script type="text/javascript">
+
+    layui.use(['form','table','layer'], function () {
+        const form = layui.form,
+            layer = layui.layer,
+            $ = layui.jquery,
+            table = layui.table;
+
+        $("#btn-search").click(function () {
+            let title = $("#title").val();
+            table.reload('munu-table', {
+                where: {"title":title},
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        });
+
+        table.render({
+            elem: '#munu-table',
+            url: '/log/listLog', //数据接口
+            page: true,
+            limit: 10,
+            limits: [10, 20, 30],
+            cols: [
+                [
+                    {title: "日志类型", field: "logType",edit: 'text',align: "center"},
+                    {title: "操作内容", field: "logContent", edit: 'text',align: "center"},
+                    {title: "IP地址", field: "logIp", align: "center"},
+                    {title: "操作时间", field: "logDate", align: "center",
+                        templet: function (d) {
+                            if (d.logDate != null) {
+                                return layui.util.toDateString(d.logDate);
+                            }
+                            return '';
+                        }
+                    }
+                ]
+            ]
+        });
+    });
+
+
+</script>
+
+</body>
+</html>
