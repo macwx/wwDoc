@@ -58,6 +58,7 @@ public class MenuController {
         Config logoImage = iConfigService.getOne(new QueryWrapper<Config>().lambda().eq(Config::getConfigKey, "logoImage"));
         Map<String,Object> logoInfoMap = new HashMap<>(16);
         logoInfoMap.put("title", "wwDoc");
+        logoInfoMap.put("href", "/user/toWelcome");
         logoInfoMap.put("image", logoImage.getConfigValue());
 
 

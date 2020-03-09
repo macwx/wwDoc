@@ -103,5 +103,21 @@ public class TeamMemberController extends BaseController{
         return ResultUtil.flag(iTeamMemberService.removeById(teamMemberId));
     }
 
+    @RequestMapping("/toJoin")
+    public ModelAndView toJoin(){
+        return new ModelAndView(thyme+"/team/teamJoin");
+    }
+
+    @RequestMapping("/myJoin")
+    public ResultUtil myJoin(int page,int limit){
+        User user = getUser();
+        Page<TeamMember> teamMemberPage = iTeamMemberService.page(new Page<>(page, limit), new QueryWrapper<TeamMember>().lambda()
+                .eq(TeamMember::getUserId, user.getUserId()));
+        ResultUtil<Object> success = ResultUtil.success(Constant.SELECT_SUCCESS);
+        success.setCount(teamMemberPage.getTotal());
+        success.setData(teamMemberPage.getRecords());
+        return success;
+    }
+
 
 }

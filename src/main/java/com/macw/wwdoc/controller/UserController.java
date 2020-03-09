@@ -8,6 +8,7 @@ import com.macw.wwdoc.Constant;
 import com.macw.wwdoc.entity.Log;
 import com.macw.wwdoc.entity.User;
 import com.macw.wwdoc.service.ILogService;
+import com.macw.wwdoc.service.IQiniuUploadFileService;
 import com.macw.wwdoc.service.IUserService;
 import com.macw.wwdoc.util.DigestUtils;
 import com.macw.wwdoc.util.IpAddressUtil;
@@ -20,9 +21,11 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -51,6 +54,9 @@ public class UserController extends BaseController {
     @Resource
     private ILogService iLogService;
 
+    @Resource
+    private IQiniuUploadFileService iQiniuUploadFileService;
+
     @RequestMapping("/toRegister")
     public ModelAndView toRegister() {
         return new ModelAndView(thyme + "/user/register");
@@ -62,13 +68,13 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/userLogin")
-    public ResultUtil userLogin(String username, String password,String captchaCode) {
+    public ResultUtil userLogin(String username, String password, String captchaCode) {
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
             return ResultUtil.error(Constant.PARAM_FAIL);
         }
         //判断验证码是否有限
         Session session = getSession();
-        if (!session.getAttribute("captchaCode").equals(captchaCode)){
+        if (!session.getAttribute("captchaCode").equals(captchaCode)) {
             //
 //            return ResultUtil.error("验证码错误或已过期！");
         }
@@ -76,7 +82,7 @@ public class UserController extends BaseController {
         session.removeAttribute("captchaCode");
         //  1.将用户输入的账号密码 封装在token中
         password = DigestUtils.md5(password);
-        logger.debug("password=== " +password);
+        logger.debug("password=== " + password);
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 //        2.获取Subject
         Subject subject = SecurityUtils.getSubject();
@@ -109,9 +115,9 @@ public class UserController extends BaseController {
         }
     }
 
-    @com.macw.wwdoc.config.Log(value = "退出登录",type = "exit")
+    @com.macw.wwdoc.config.Log(value = "退出登录", type = "exit")
     @RequestMapping("/loginLou")
-    public ResultUtil loginLou(){
+    public ResultUtil loginLou() {
         try {
             getSession().getAttribute(Constant.LOGIN_USER);
             Subject subject = SecurityUtils.getSubject();
@@ -127,6 +133,7 @@ public class UserController extends BaseController {
 
     /**
      * 生成验证码
+     *
      * @param response
      * @throws IOException
      */
@@ -139,7 +146,7 @@ public class UserController extends BaseController {
         //输出code 打印生成的验证码
         logger.debug(captcha.getCode());
         Session session = getSession();
-        session.setAttribute("captchaCode",captcha.getCode());
+        session.setAttribute("captchaCode", captcha.getCode());
         //图片输出 响应流
         ServletOutputStream outputStream = response.getOutputStream();
         //图形验证码写出，可以写出到文件，也可以写出到流
@@ -150,8 +157,30 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/toWelcome")
-    public ModelAndView toWelcome(){
-        return new ModelAndView(thyme+"/welcome");
+    public ModelAndView toWelcome() {
+        return new ModelAndView(thyme + "/welcome");
+    }
+
+    @RequestMapping("/toSetting")
+    public ModelAndView toSetting() {
+        User user = getUser();
+        ModelAndView mv = new ModelAndView(thyme + "/user/user-setting");
+        mv.addObject("user", user);
+        return mv;
+    }
+
+    @RequestMapping("/updateUser")
+    public ResultUtil updateUser(MultipartFile file, User user) {
+        if (file != null && file.getSize() > 0) {
+            String url = null;
+            try {
+                url = iQiniuUploadFileService.uploadFile(file);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            user.setHeadImage(url);
+        }
+        return ResultUtil.flag(iUserService.updateById(user));
     }
 
 }

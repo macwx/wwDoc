@@ -30,7 +30,7 @@
             menu.`status` = 1 AND
             menu.pid = 0 AND
             menu.identify = #{identify}
-            ORDER BY menu.sort DESC
+            ORDER BY menu.sort ASC
     </select>
 
 </mapper>

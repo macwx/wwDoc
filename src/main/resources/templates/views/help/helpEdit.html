@@ -19,7 +19,7 @@
             <input type="hidden" name="helpId" id="helpId" th:value="${help!=null ? help.helpId:''}" >
             <input type="hidden" name="content" id="content" value="">
             <div class="layui-form-item">
-                <label class="layui-form-label required">帮助详情</label>
+                <label class="layui-form-label required">公告详情</label>
                 <div class="layui-input-block">
                     <div id="editor">
                         <div th:utext="${help!=null ? help.content:'请输入内容...'}"></div>
