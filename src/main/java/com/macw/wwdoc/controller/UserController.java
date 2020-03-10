@@ -6,10 +6,9 @@ import cn.hutool.captcha.CircleCaptcha;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.macw.wwdoc.Constant;
 import com.macw.wwdoc.entity.Log;
+import com.macw.wwdoc.entity.Team;
 import com.macw.wwdoc.entity.User;
-import com.macw.wwdoc.service.ILogService;
-import com.macw.wwdoc.service.IQiniuUploadFileService;
-import com.macw.wwdoc.service.IUserService;
+import com.macw.wwdoc.service.*;
 import com.macw.wwdoc.util.DigestUtils;
 import com.macw.wwdoc.util.IpAddressUtil;
 import com.macw.wwdoc.util.ResultUtil;
@@ -33,6 +32,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -56,6 +56,15 @@ public class UserController extends BaseController {
 
     @Resource
     private IQiniuUploadFileService iQiniuUploadFileService;
+
+    @Resource
+    private ITeamService iTeamService;
+
+    @Resource
+    private IApidetailService iApidetailService;
+
+    @Resource
+    private IProjectService iProjectService;
 
     @RequestMapping("/toLogin")
     public ModelAndView toLogin() {
@@ -153,7 +162,12 @@ public class UserController extends BaseController {
 
     @RequestMapping("/toWelcome")
     public ModelAndView toWelcome() {
-        return new ModelAndView(thyme + "/welcome");
+        ModelAndView mv = new ModelAndView(thyme + "/welcome");
+        mv.addObject("userNumber", iUserService.list().size());
+        mv.addObject("teamNumber", iTeamService.list().size());
+        mv.addObject("proNumber", iProjectService.list().size());
+        mv.addObject("apiNumber", iApidetailService.list().size());
+        return mv;
     }
 
     @RequestMapping("/toSetting")

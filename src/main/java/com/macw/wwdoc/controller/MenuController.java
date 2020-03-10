@@ -45,7 +45,12 @@ public class MenuController {
         MenuVo menuVo = iMenuService.listMenuVo(1,"控制台","fa fa-home");
         Map<String,Object> map2 = new HashMap<>(16);
         map2.put("control", menuVo);
+        Map map = info();
+        map.put("menuInfo",map2);
+        return map;
+    }
 
+    private Map info(){
         Config clearUrl = iConfigService.getOne(new QueryWrapper<Config>().lambda().eq(Config::getConfigKey, "clearUrl"));
         Map<String,Object> clearUrlMap = new HashMap<>(16);
         clearUrlMap.put("clearUrl", clearUrl.getConfigValue());
@@ -61,13 +66,12 @@ public class MenuController {
         logoInfoMap.put("href", "/user/toWelcome");
         logoInfoMap.put("image", logoImage.getConfigValue());
 
-
         Map<String,Object> map = new HashMap<>(16);
-        map.put("menuInfo",map2);
         map.put("clearInfo", clearUrlMap);
         map.put("homeInfo",homeInfoMap);
         map.put("logoInfo", logoInfoMap);
         return map;
+
     }
 
     @RequestMapping("/doc")
@@ -76,7 +80,7 @@ public class MenuController {
         Map<String,Object> map2 = new HashMap<>(16);
         map2.put("docs", menuVo2);
 
-        Map<String,Object> map = new HashMap<>();
+        Map map = info();
         map.put("menuInfo",map2);
         return map;
     }
