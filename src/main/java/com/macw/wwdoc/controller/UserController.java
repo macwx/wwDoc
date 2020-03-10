@@ -57,11 +57,6 @@ public class UserController extends BaseController {
     @Resource
     private IQiniuUploadFileService iQiniuUploadFileService;
 
-    @RequestMapping("/toRegister")
-    public ModelAndView toRegister() {
-        return new ModelAndView(thyme + "/user/register");
-    }
-
     @RequestMapping("/toLogin")
     public ModelAndView toLogin() {
         return new ModelAndView(thyme + "/user/login");
@@ -170,7 +165,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/updateUser")
-    public ResultUtil updateUser(MultipartFile file, User user) {
+    public ResultUtil updateUser(MultipartFile file, User user,String new_password) {
         if (file != null && file.getSize() > 0) {
             String url = null;
             try {
@@ -180,7 +175,44 @@ public class UserController extends BaseController {
             }
             user.setHeadImage(url);
         }
+        if (StringUtils.isNotBlank(user.getPassword())){
+            User user1 = getUser();
+            if (!user1.getPassword().equals(DigestUtils.md5(user.getPassword()))){
+                return ResultUtil.error("原密码错误！");
+            }
+            user.setUserId(user1.getUserId());
+            user.setPassword(DigestUtils.md5(new_password));
+        }
         return ResultUtil.flag(iUserService.updateById(user));
+    }
+
+    @RequestMapping("/toUpdatePwd")
+    public ModelAndView toUpdatePwd(){
+        return new ModelAndView(thyme+"/user/user-password");
+    }
+
+    @RequestMapping("/toRegister")
+    public ModelAndView toRegister(){
+        return new ModelAndView(thyme+"/user/register");
+    }
+
+    /**
+     * 用户注册
+     * @param user
+     * @return
+     */
+    @RequestMapping("/register")
+    public ResultUtil register(User user){
+        if (StringUtils.isNotBlank(user.getUserName())){
+            User one = iUserService.getOne(new QueryWrapper<User>().lambda()
+                    .eq(User::getUserName, user.getUserName()));
+            if(one!=null){
+                return ResultUtil.error("该用户名账号已被占用！");
+            }
+        }
+        user.setPassword(DigestUtils.md5(user.getPassword()));
+        user.setRegisterTime(LocalDateTime.now());
+        return ResultUtil.flag(iUserService.save(user));
     }
 
 }

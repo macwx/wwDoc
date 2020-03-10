@@ -34,15 +34,18 @@
             <li class="layui-nav-item mobile layui-hide-xs" lay-unselect>
                 <a href="javascript:;" data-check-screen="full"><i class="fa fa-arrows-alt"></i></a>
             </li>
-            <li class="layui-nav-item layuimini-setting">
-                <a href="javascript:;" ><div th:text="${user.nickname}"></div></a>
+            <li class="layui-nav-item layuimini-setting" >
+                <a href="javascript:;" >
+               <!--     <img class="layui-upload-img" th:src="@{${user.headImage}}" id="headImage"
+                         style="max-width: 20px;max-height: 20px;">-->
+                    <div th:text="${user.nickname}"></div></a>
                 <dl class="layui-nav-child">
                     <dd>
                         <a href="javascript:;" data-iframe-tab="/user/toSetting" data-title="基本资料"
                            data-icon="fa fa-gears">基本资料</a>
                     </dd>
                     <dd>
-                        <a href="javascript:;" data-iframe-tab="page/user-password.html" data-title="修改密码"
+                        <a href="javascript:;" data-iframe-tab="user/toUpdatePwd" data-title="修改密码"
                            data-icon="fa fa-gears">修改密码</a>
                     </dd>
                     <dd>

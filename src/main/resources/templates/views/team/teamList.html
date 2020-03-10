@@ -182,10 +182,7 @@
             layer.msg('[ID: '+ data.configId +'] ' + field + ' 字段更改为：'+ value);
         });
 
-        $('.layui-btn').on('click', function () {
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
+
 
     });
 

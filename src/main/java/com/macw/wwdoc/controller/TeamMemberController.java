@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.macw.wwdoc.Constant;
 import com.macw.wwdoc.config.Log;
+import com.macw.wwdoc.entity.Team;
 import com.macw.wwdoc.entity.TeamMember;
 import com.macw.wwdoc.entity.User;
 import com.macw.wwdoc.service.ITeamMemberService;
@@ -12,6 +13,7 @@ import com.macw.wwdoc.service.ITeamService;
 import com.macw.wwdoc.service.IUserService;
 import com.macw.wwdoc.util.IntegerUtils;
 import com.macw.wwdoc.util.ResultUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -33,7 +37,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/teamMember")
-public class TeamMemberController extends BaseController{
+public class TeamMemberController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -47,14 +51,14 @@ public class TeamMemberController extends BaseController{
     private IUserService iUserService;
 
     @RequestMapping("/toTeamMemList")
-    public ModelAndView toTeamMemList(Integer teamId){
+    public ModelAndView toTeamMemList(Integer teamId) {
         ModelAndView mv = new ModelAndView(thyme + "/team/teamMemberList");
-        mv.addObject("teamId",teamId);
+        mv.addObject("teamId", teamId);
         return mv;
     }
 
     @RequestMapping("/listTeamMember")
-    public ResultUtil listTeamMember(int page,int limit,Integer teamId){
+    public ResultUtil listTeamMember(int page, int limit, Integer teamId) {
         Page<TeamMember> teamMemberPage = new Page<>(page, limit);
         Page<TeamMember> memberPage = iTeamMemberService.page(teamMemberPage, new QueryWrapper<TeamMember>().lambda()
                 .eq(TeamMember::getTeamId, teamId));
@@ -66,23 +70,23 @@ public class TeamMemberController extends BaseController{
 
 
     @RequestMapping("/toAddTM")
-    public ModelAndView toAddTM(Integer teamId){
+    public ModelAndView toAddTM(Integer teamId) {
         ModelAndView mv = new ModelAndView(thyme + "/team/teamMemberAdd");
-        mv.addObject("teamId",teamId);
+        mv.addObject("teamId", teamId);
         return mv;
     }
 
-    @Log(value = "添加团队成员",type = "add")
+    @Log(value = "添加团队成员", type = "add")
     @RequestMapping("/addTeamMember")
-    public ResultUtil addTeamMember(TeamMember teamMember){
+    public ResultUtil addTeamMember(TeamMember teamMember) {
         teamMember.setCreateTime(LocalDateTime.now());
         User user = iUserService.getOne(new QueryWrapper<User>().lambda().eq(User::getUserName, teamMember.getUserName()));
-        if (user==null){
-            ResultUtil.error("您输入的用户名为空！");
+        if (user == null) {
+            return ResultUtil.error("您输入的用户名为空！");
         }
         List<TeamMember> teamMemberList = iTeamMemberService.list(new QueryWrapper<TeamMember>().lambda().eq(TeamMember::getTeamId, teamMember.getTeamId()));
         for (TeamMember member : teamMemberList) {
-            if (member.getUserId()==user.getUserId()){
+            if (member.getUserId() == user.getUserId()) {
                 return ResultUtil.error("该用户已存在于您的团队！请勿重复加入");
             }
         }
@@ -91,31 +95,38 @@ public class TeamMemberController extends BaseController{
         return ResultUtil.flag(iTeamMemberService.save(teamMember));
     }
 
-    @Log(value = "更新团队成员",type = "update")
+    @Log(value = "更新团队成员", type = "update")
     @RequestMapping("/teamMemberEdit")
-    public ResultUtil teamMemberEdit(TeamMember teamMember){
+    public ResultUtil teamMemberEdit(TeamMember teamMember) {
         return ResultUtil.flag(iTeamMemberService.updateById(teamMember));
     }
 
-    @Log(value = "删除团队成员",type = "del")
+    @Log(value = "删除团队成员", type = "del")
     @RequestMapping("/deleteOne")
-    public ResultUtil deleteOne(Integer teamMemberId){
+    public ResultUtil deleteOne(Integer teamMemberId) {
         return ResultUtil.flag(iTeamMemberService.removeById(teamMemberId));
     }
 
-    @RequestMapping("/toJoin")
-    public ModelAndView toJoin(){
-        return new ModelAndView(thyme+"/team/teamJoin");
+    @RequestMapping("/toJoinList")
+    public ModelAndView toJoin() {
+        logger.debug(thyme + "/team/teamJoin");
+        return new ModelAndView(thyme + "/team/teamJoin");
     }
 
     @RequestMapping("/myJoin")
-    public ResultUtil myJoin(int page,int limit){
+    public ResultUtil myJoin(int page, int limit,String title) {
         User user = getUser();
-        Page<TeamMember> teamMemberPage = iTeamMemberService.page(new Page<>(page, limit), new QueryWrapper<TeamMember>().lambda()
+        Page<Map<String, Object>> mapPage = iTeamMemberService.pageMaps(new Page<>(page, limit), new QueryWrapper<TeamMember>().lambda()
                 .eq(TeamMember::getUserId, user.getUserId()));
+        List<Map<String, Object>> records = mapPage.getRecords();
+        for (Map<String, Object> map : records) {
+            Team team = iTeamService.getById((Serializable) map.get("team_id"));
+            map.put("teamName", team.getTeamName());
+            map.put("createUser", team.getCreateUser());
+        }
         ResultUtil<Object> success = ResultUtil.success(Constant.SELECT_SUCCESS);
-        success.setCount(teamMemberPage.getTotal());
-        success.setData(teamMemberPage.getRecords());
+        success.setCount(mapPage.getTotal());
+        success.setData(mapPage.getRecords());
         return success;
     }
 

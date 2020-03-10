@@ -39,7 +39,7 @@
         form.on('submit(saveBtn)', function (data) {
             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
             $.ajax({
-                url: "/team/listTeamMember",
+                url: "/team/editTeam",
                 data: data.field,
                 type: "post",
                 //4.接收后台修改响应回来的数据；关闭弹出层、提示修改信息、刷新table
