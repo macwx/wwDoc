@@ -14,6 +14,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Macw
@@ -71,6 +75,31 @@ public class FileUploadController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * wangEditor图片上传
+     * @param file
+     * @return
+     */
+    @RequestMapping("/wangEditorUpload")
+    public Map wangEditorUpload(MultipartFile file){
+        Map map = new HashMap(16);
+        try {
+            String url = iQiniuUploadFileService.uploadFile(file);
+            map.put("errno",0);
+            List<String> list=new ArrayList<>();
+            list.add(url);
+            map.put("data", list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("errno",1);
+        }
+        logger.debug("0-----------"+map);
+        return map;
+
+
     }
 
 

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="views/include :: header('公告详情')"/>
+</head>
+<body>
+<div class="layuimini-container" style="text-align: center;margin: 0px 100px 0px 100px;width: 80%" th:object="${question}">
+    <div class="layuimini-main">
+        <div class="layui-input-inline" style="width: 100px;float: right">
+            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="re_turn">
+                <i class="layui-icon layui-icon-refresh-1"></i> 返回列表
+            </button>
+        </div>
+        <div class="layui-form-item">
+            <h1 th:text="*{title}"></h1>
+            <input type="hidden" id="questionId" th:value="*{questionId}">
+        </div>
+        <div class="layui-form-item" style="padding: 20px">
+            <h5 th:text="*{createName}"></h5>
+        </div>
+        <div class="layui-form-item">
+            <div th:utext="*{content}" style="float: left"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#re_turn").click(function () {
+        window.location.href = '/question/toQuestionList';
+    });
+    $("#btn-edit").click(function () {
+        window.location.href = '/question/toQuestionAdd?questionId=' + $("#questionId").val();    })
+
+</script>
+
+</body>
+</html>

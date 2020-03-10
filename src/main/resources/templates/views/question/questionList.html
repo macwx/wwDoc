@@ -16,7 +16,7 @@
         <div style="padding-bottom: 10px;" id="LAY_lay_add">
 
             <div class="layui-input-inline" style="width: 200px;">
-                <input type="text" name="title" id="title" placeholder="请输入公告标题" autocomplete="off"
+                <input type="text" name="title" id="title" placeholder="请输入反馈标题" autocomplete="off"
                        class="layui-input">
             </div>
             <div class="layui-input-inline" style="width: 100px;">
@@ -52,13 +52,10 @@
             });
         });
 
-        $("#add").click(function () {
-            window.location.href = '/help/toHelpEdit';
-        });
 
         let tab_tab = table.render({
             elem: '#munu-table',
-            url: '/help/listHelp', //数据接口
+            url: '/question/listQuestion', //数据接口
             page: true,
             limit: 5,
             limits: [5,10, 20, 30],
@@ -82,21 +79,32 @@
                             return '';
                         }
                     },
+                    {title: "处理进度", field: "state", align: "center",
+                        templet: function(d){
+                            if(d.state == 1){
+                                return '<button type="button" class="layui-btn  layui-btn-normal"  lay-event="yn">已处理</button>';
+                            }else{
+                                return '<button type="button" class="layui-btn  layui-btn-danger"  lay-event="yn">未处理</button>';
+                            }
+                        }
+                    },
                     {title: "操作", templet: '#auth-state',width: 100, align: 'center',}
                 ]
             ]
         });
 
+        table.reload('munu-table', {
+        });
 
         //监听工具条
         table.on('tool(munu-table)', function (obj) {
             var data = obj.data;
             var layEvent = obj.event;
             if (layEvent === 'del') {
-                layer.confirm('确认删除此公告吗？', function (index) {
+                layer.confirm('确认删除此反馈吗？', function (index) {
                     $.ajax({
-                        url: '/help/deleteOne',
-                        data: {"helpId":data.helpId},
+                        url: '/question/deleteOne',
+                        data: {"questionId":data.questionId},
                         type: 'post',
                         dataType: 'json',
                         success: function (data) {
@@ -121,43 +129,11 @@
                     });
                 });
             }else  if (layEvent === 'detail'){
-                window.location.href = '/help/toHelpInfo?helpId='+data.helpId;
+                window.location.href = '/question/toQuestionDetail?questionId='+data.questionId;
             }
         });
 
-        //监听单元格编辑
-        table.on('edit(munu-table)', function(obj){
-            var value = obj.value //得到修改后的值
-                ,data = obj.data //得到所在行所有键值
-                ,field = obj.field; //得到字段
-            $.ajax({
-                url: '/config/saveOrUpdate?'+field+"="+value,
-                data: {"configId":data.configId},
-                type: 'post',
-                dataType: 'json',
-                success: function (data) {
-                    if (data.code == 0) {
-                        layer.msg(data.msg, {
-                            offset: '15px',
-                            icon: 6,
-                            time: 1000
-                        }, function () {
-                           /* table.reload('munu-table', {
-                            });*/
-                        });
-                    } else {
-                        layer.msg(data.msg, {
-                            icon: 5,
-                            time: 2000
-                        });
-                    }
-                }, error: function (data) {
-                    layer.msg("操作失败", {time: 1000, icon: 5});
-                }
 
-            });
-            layer.msg('[ID: '+ data.configId +'] ' + field + ' 字段更改为：'+ value);
-        });
 
         $('.layui-btn').on('click', function () {
             var type = $(this).data('type');
