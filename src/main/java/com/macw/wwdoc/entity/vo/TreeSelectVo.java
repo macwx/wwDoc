@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 public class TreeSelectVo {
 
-    private String id;
+    private Integer id;
     private String name;
     private Boolean open;
     private List<TreeSelectVo> children;

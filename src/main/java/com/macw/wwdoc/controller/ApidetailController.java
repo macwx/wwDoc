@@ -12,6 +12,8 @@ import com.macw.wwdoc.entity.vo.TreeSelectVo;
 import com.macw.wwdoc.mapper.CategoryMapper;
 import com.macw.wwdoc.service.IApidetailService;
 import com.macw.wwdoc.service.ICategoryService;
+import com.macw.wwdoc.util.DateUtil;
+import com.macw.wwdoc.util.FileUploadUtil;
 import com.macw.wwdoc.util.IntegerUtils;
 import com.macw.wwdoc.util.ResultUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -22,8 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -50,6 +56,7 @@ public class ApidetailController extends BaseController {
 
     /**
      * 添加APi 或者查询单个APi
+     *
      * @param apiId
      * @return
      */
@@ -57,7 +64,7 @@ public class ApidetailController extends BaseController {
     @RequestMapping("/toApiAdd")
     public ModelAndView toApiAdd(Integer apiId) {
         ModelAndView mv = new ModelAndView(thyme + "/docs/apis/apiAdd");
-        if (IntegerUtils.isNotBlank(apiId)){
+        if (IntegerUtils.isNotBlank(apiId)) {
             Apidetail apidetail = iApidetailService.getById(apiId);
             mv.addObject("apidetail", apidetail);
         }
@@ -67,10 +74,11 @@ public class ApidetailController extends BaseController {
     /**
      * 添加api
      * 如果，相同分类id，创建人id，项目id，api Title，则认定为同一API，则更新版本
+     *
      * @param apidetail
      * @return
      */
-    @Log(value = "添加API",type = "add")
+    @Log(value = "添加API", type = "add")
     @RequestMapping("/addApi")
     public ResultUtil addApi(Apidetail apidetail) {
         User user = getUser();
@@ -85,24 +93,25 @@ public class ApidetailController extends BaseController {
                 .eq(Apidetail::getCategoryId, apidetail.getCategoryId())
                 .eq(Apidetail::getProjectId, apidetail.getProjectId())
                 .eq(Apidetail::getIsNew, 1));
-        if (serviceOne!=null)  {
-           serviceOne.setIsNew(0);
-           apidetail.setVersion(serviceOne.getVersion()+1);
-           iApidetailService.updateById(serviceOne);
+        if (serviceOne != null) {
+            serviceOne.setIsNew(0);
+            apidetail.setVersion(serviceOne.getVersion() + 1);
+            iApidetailService.updateById(serviceOne);
         }
         return ResultUtil.flag(iApidetailService.save(apidetail));
     }
 
     /**
      * 查看历史版本
+     *
      * @param page
      * @param limit
      * @param apidetail
      * @return
      */
     @RequestMapping("/showVersion")
-    public ResultUtil showVersion(int page, int limit,Apidetail apidetail){
-        if (IntegerUtils.isBlank(apidetail.getCategoryId()) || StringUtils.isBlank(apidetail.getTitle())){
+    public ResultUtil showVersion(int page, int limit, Apidetail apidetail) {
+        if (IntegerUtils.isBlank(apidetail.getCategoryId()) || StringUtils.isBlank(apidetail.getTitle())) {
             return ResultUtil.error("历史版本为空！");
         }
         User user = getUser();
@@ -122,22 +131,41 @@ public class ApidetailController extends BaseController {
 
     /**
      * 查询分类列表树
+     *
      * @return
      */
     @RequestMapping("/getTreeSelectVos")
-    public List<TreeSelectVo> getTreeSelectVos() {
+    public List<TreeSelectVo> getTreeSelectVos(Integer  id) {
         List<TreeSelectVo> treeSelectVos = categoryMapper.listTreeSelectVo(getProId());
+        for (TreeSelectVo treeSelectVo : treeSelectVos) {
+            treeSelectVo.setOpen(true);
+            treeSelectVo.setChecked(false);
+
+            if (treeSelectVo.getId().equals(id)) {
+                treeSelectVo.setChecked(true);
+            }
+            List<TreeSelectVo> children = treeSelectVo.getChildren();
+            for (TreeSelectVo child : children) {
+                child.setChecked(false);
+                child.setOpen(true);
+                if (child.getId().equals(id)) {
+                    child.setChecked(true);
+                }
+            }
+        }
+
         return treeSelectVos;
     }
 
     @RequestMapping("/toAPIList")
-    public ModelAndView toAPIList(){
+    public ModelAndView toAPIList() {
         ModelAndView mv = new ModelAndView(thyme + "/docs/apis/apiList");
         return mv;
     }
 
     /**
      * 查询API列表
+     *
      * @param page
      * @param limit
      * @param categoryId
@@ -145,13 +173,14 @@ public class ApidetailController extends BaseController {
      * @return
      */
     @RequestMapping("/listApi")
-    public ResultUtil listApi(int page, int limit,Integer categoryId,String title){
+    public ResultUtil listApi(int page, int limit, Integer categoryId, String title) {
         Page<Apidetail> apidetailPage = new Page<>(page, limit);
         Page<Apidetail> page1 = iApidetailService.page(apidetailPage, new QueryWrapper<Apidetail>().lambda()
                 .eq(Apidetail::getProjectId, getProId())
-        .eq(Apidetail::getIsNew, 1)
-        .eq(IntegerUtils.isNotBlank(categoryId), Apidetail::getCategoryId, categoryId)
-        .like(StringUtils.isNotBlank(title), Apidetail::getTitle, title));
+                .eq(Apidetail::getIsNew, 1)
+                .eq(IntegerUtils.isNotBlank(categoryId), Apidetail::getCategoryId, categoryId)
+                .like(StringUtils.isNotBlank(title), Apidetail::getTitle, title)
+                .orderByDesc(Apidetail::getCreateTime));
         ResultUtil<Object> success = ResultUtil.success(Constant.SELECT_SUCCESS);
         success.setCount(page1.getTotal());
         success.setData(page1.getRecords());
@@ -160,14 +189,25 @@ public class ApidetailController extends BaseController {
 
     /**
      * 删除单个API
+     *
      * @param apiId
      * @return
      */
-    @Log(value = "删除API",type = "del")
+    @Log(value = "删除API", type = "del")
     @RequestMapping("/deleteOne")
-    public ResultUtil deleteOne(Integer apiId){
+    public ResultUtil deleteOne(Integer apiId) {
         return ResultUtil.flag(iApidetailService.removeById(apiId));
     }
 
-
+    @Log(value = "导出word",type = "export")
+    @RequestMapping("/export")
+    public void export(Integer apiId,HttpServletRequest request, HttpServletResponse response){
+        Apidetail apidetail = iApidetailService.getById(apiId);
+        Map<String,Object> params = new HashMap<>(16);
+        params.put("title",apidetail.getTitle());
+        params.put("author",apidetail.getCreateUser());
+        params.put("time", DateUtil.dateFormat(apidetail.getCreateTime(),DateUtil.dateTime));
+        params.put("context", apidetail.getContext());
+        FileUploadUtil.exportWord("http://wwdoc.henaumcw.top/2020/03/14/13/41/16/a6e67290", System.getProperty("user.dir")+"/temp",apidetail.getTitle()+".docx",params,request,response);
+    }
 }

@@ -66,7 +66,7 @@ public class ConfigController extends BaseController {
     @Log(value = "添加/更新配置",type = "add")
     @RequestMapping("/saveOrUpdate")
     public ResultUtil saveOrUpdate(Config config){
-        logger.debug("config---="+config);
+
         User user = getUser();
         if (IntegerUtils.isBlank(config.getConfigId())){
             config.setCreateTime(LocalDateTime.now());

@@ -30,6 +30,7 @@
 <!-- 操作列 -->
 <script type="text/html" id="auth-state">
     <a class="layui-btn  layui-btn-sm" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑/预览</a>
+    <a class="layui-btn layui-btn-normal layui-btn-sm" lay-event="export"><i class="layui-icon">&#xe67d;</i>导出到本地</a>
     <a class="layui-btn layui-btn-danger  layui-btn-sm" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
 </script>
 
@@ -118,7 +119,7 @@
                             return '';
                         }
                     },
-                    {title: "操作", templet: '#auth-state',width: 250, align: 'center',}
+                    {title: "操作", templet: '#auth-state',width: 350, align: 'center',}
                 ]
             ]
         });
@@ -159,6 +160,8 @@
                 });
             } else if (layEvent === 'edit') {
                 window.location.href = '/apidetail/toApiAdd?apiId='+data.apidetailId;
+            } else if (layEvent === 'export'){
+                window.location.href = 'apidetail/export?apiId='+data.apidetailId;
             }
         });
 

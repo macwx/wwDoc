@@ -56,7 +56,7 @@ public class HelpController extends BaseController {
 
     @RequestMapping("/helpEdit")
     public ResultUtil helpEdit(Help help){
-        logger.debug("------"+help);
+
         User user = getUser();
         if (IntegerUtils.isBlank(help.getHelpId())) {
             help.setCreateTime(LocalDateTime.now());

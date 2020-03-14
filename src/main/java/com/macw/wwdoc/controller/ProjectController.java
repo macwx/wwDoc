@@ -76,7 +76,7 @@ public class ProjectController extends BaseController {
 
     @RequestMapping("/toEdit")
     public ModelAndView toEdit(Integer proId) {
-        logger.debug("----------------------------- " + proId);
+
         ModelAndView mv = new ModelAndView(thyme + "/project/projectSetting");
         Project project = iProjectService.getById(proId);
         mv.addObject("project", project);
@@ -114,7 +114,7 @@ public class ProjectController extends BaseController {
 
     @RequestMapping("/toDocs")
     public ModelAndView toDocs(Integer proId) {
-        logger.debug("----------------------------- " + proId);
+
         if (IntegerUtils.isNotBlank(proId)) {
             getSession().setAttribute(Constant.PRO_ID, proId);
         }

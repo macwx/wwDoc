@@ -40,7 +40,7 @@ public class CategoryController extends BaseController {
 
     @RequestMapping("toCategoryList")
     public ModelAndView toCategory() {
-        logger.debug("proid========" + getProId());
+
         return new ModelAndView(thyme + "/docs/category/categoryList");
     }
 

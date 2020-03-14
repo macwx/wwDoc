@@ -26,10 +26,8 @@
                     <div class="layui-input-inline" style="width: 500px">
                         <label class="layui-form-label required layui-bg-blue" style="text-align: center">目录:</label>
                         <div class="layui-input-block">
-
-                            <input type="text" id="tree" lay-filter="tree"
-                                   th:value="${apidetail!=null?apidetail.categoryName:''}"
-                                   autocomplete="off" class="layui-input layui-select-title">
+                            <input type="text" id="tree" lay-filter="tree" class="layui-input"
+                                   autocomplete="off">
                             <input type="hidden" name="categoryId" id="categoryTree"
                                    th:value="${apidetail!=null?apidetail.categoryId:''}">
                             <input type="hidden" name="categoryName" id="categoryName"
@@ -133,16 +131,20 @@
             });
         });
 
-
-        var tree = treeSelect.render({
+        var ids = 0;
+        if ($("#categoryTree").val()!=null){
+            ids = $("#categoryTree").val();
+            //alert(ids);
+        }
+        var ss = treeSelect.render({
             // 选择器
             elem: '#tree',
             // 数据
             data: '/apidetail/getTreeSelectVos',
             // 异步加载方式：get/post，默认get
-            type: 'get',
+            type: 'post',
             // 占位符
-            placeholder: '请选择所属目录',
+            // placeholder: '请选择所属目录',
             // 是否开启搜索功能：true/false，默认false
             search: true,
             // 点击回调
@@ -150,21 +152,25 @@
                 $("#categoryTree").val(d.current.id);
                 $("#categoryName").val(d.current.name);
             },
+            style:{
+                folder:{enable: false},
+                line:{enable: true}
+            },
             success: function (d) {
-                // 加载完成后的回调函数
 
+                console.log(d);
+//                选中节点，根据id筛选
+               ss.checkNode('tree', 13);
+                console.log("---"+$('#tree').val());
 //                获取zTree对象，可以调用zTree方法
-                //  console.log(treeObj);
                 var treeObj = treeSelect.zTree('tree');
-
-                if ($("#categoryName").val() != null) {
-                    //  选中节点，根据id筛选
-                   // treeSelect.checkNode('tree', $("#categoryTree").val());
-                }
+                console.log(treeObj);
 //                刷新树结构
-                //treeSelect.refresh();
+                treeSelect.refresh('tree');
             }
         });
+
+        $("#tree").val(13);
 
         let index;
         let active = {

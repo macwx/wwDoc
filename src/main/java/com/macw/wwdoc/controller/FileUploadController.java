@@ -2,7 +2,6 @@ package com.macw.wwdoc.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.macw.wwdoc.service.IQiniuUploadFileService;
-import com.macw.wwdoc.util.FileUploadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,11 +96,14 @@ public class FileUploadController {
             e.printStackTrace();
             map.put("errno",1);
         }
-        logger.debug("0-----------"+map);
+
         return map;
-
-
     }
+
+
+
+
+
 
 
 }

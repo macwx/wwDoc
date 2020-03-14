@@ -79,14 +79,13 @@ public class UserController extends BaseController {
         //判断验证码是否有限
         Session session = getSession();
         if (!session.getAttribute("captchaCode").equals(captchaCode)) {
-            //
-//            return ResultUtil.error("验证码错误或已过期！");
+            return ResultUtil.error("验证码错误或已过期！");
         }
         //清除session中的验证码
         session.removeAttribute("captchaCode");
         //  1.将用户输入的账号密码 封装在token中
         password = DigestUtils.md5(password);
-        logger.debug("password=== " + password);
+
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 //        2.获取Subject
         Subject subject = SecurityUtils.getSubject();
@@ -216,7 +215,12 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping("/register")
-    public ResultUtil register(User user){
+    public ResultUtil register(User user, String captchaCode){
+        //判断验证码是否有限
+        Session session = getSession();
+        if (!session.getAttribute("captchaCode").equals(captchaCode)) {
+            return ResultUtil.error("验证码错误或已过期！");
+        }
         if (StringUtils.isNotBlank(user.getUserName())){
             User one = iUserService.getOne(new QueryWrapper<User>().lambda()
                     .eq(User::getUserName, user.getUserName()));
