@@ -34,13 +34,13 @@ clone项目之后导入idea 或eclipse
 
 如有意一同开发请联系QQ：1055215129
 
-![1583827844251](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1583827844251.png)
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0310/202529_eb52f530_1668143.png "1583827844251.png")
 
-![1583827939673](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1583827939673.png)
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0310/202605_d9ae3a54_1668143.png "1583827939673.png")
 
-![1583827992405](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1583827992405.png)
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0310/202616_454fe9cd_1668143.png "1583827992405.png")
 
-![1583828642201](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1583828642201.png)
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0310/202625_8775d9b3_1668143.png "1583828642201.png")
 
 
 
