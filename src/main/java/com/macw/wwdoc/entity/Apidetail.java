@@ -112,7 +112,7 @@ public class Apidetail implements Serializable {
     private String contextHtml;
 
     /**
-     * 文章备注
+     * 文章备注（文章标识-uuid）
      */
     private String remark;
 

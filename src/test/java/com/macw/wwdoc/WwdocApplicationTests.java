@@ -1,6 +1,8 @@
 package com.macw.wwdoc;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.macw.wwdoc.entity.Category;
 import com.macw.wwdoc.entity.Menu;
 import com.macw.wwdoc.entity.vo.MenuVo;
@@ -24,6 +26,20 @@ public class WwdocApplicationTests {
 
     @Resource
     private ICategoryService iCategoryService;
+
+   /* @Test
+    public void add(){
+        Category category = new Category();
+        category.setCategoryId(23);
+        category.setCategoryName("test222");
+        LambdaUpdateWrapper<Category> eq = new UpdateWrapper<Category>().lambda().eq(Category::getCategoryId, category.getCategoryId()).set(Category::getCategoryName,"ddd");
+        System.out.println(eq);
+        boolean update = iCategoryService.update(eq);
+
+        System.out.println(update);
+        System.out.println(category.getCategoryId());
+
+    }*/
 
     @Test
     public void contextLoads() {

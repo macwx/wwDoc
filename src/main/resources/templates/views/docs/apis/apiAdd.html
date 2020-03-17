@@ -22,7 +22,7 @@
                 <div class="layui-input-inline" style="width: 500px">
                     <label class="layui-form-label required layui-bg-blue layui-btn-fluid">标题:</label>
                     <div class="layui-input-block">
-                        <input type="text" name="title" lay-verify="required" lay-reqtext="标题不能为空"
+                        <input type="text" th:name="title" lay-verify="required" lay-reqtext="标题不能为空"
                                placeholder="请输入标题" class="layui-input" autocomplete="off"
                                th:value="${apidetail!=null?apidetail.title:''}">
                     </div>
@@ -31,15 +31,15 @@
                 <div class="layui-inline">
                     <label class="layui-form-label required layui-bg-blue">目录:</label>
                     <div class="layui-input-inline" style="width: 500px;text-align: left">
-                        <select name="categoryId">
-                            <option value="">请选择所属分类</option>
+                        <select th:name="categoryId">
+                            <option value="" >请选择所属分类</option>
                             <span th:each="list:${treeSelectVos}">
-                                        <option th:value="${list.id}" th:text="${list.name}">
+                                        <option th:value="${list.id}" th:text="${list.name}" th:selected="${list.id == apidetail.categoryId}">
                                         </option>
                                     <span th:if="${not  #lists.isEmpty(list.children) || list.children=='null'}">
                                         <optgroup th:label="${list.name}" style="margin-left: 20px">
                                             <span th:each="child:${list.children}">
-                                                <option th:value="${child.id}" th:text="${    child.name}">
+                                                <option th:value="${child.id}" th:text="${child.name}" th:selected="${child.id == apidetail.categoryId }">
                                                 </option>
                                             </span>
 
@@ -54,8 +54,11 @@
 
 
             </div>
-            <input type="hidden" name="categoryName" id="categoryName"
+            <input type="hidden" th:name="categoryName" id="categoryName"
                    th:value="${apidetail!=null?apidetail.categoryName:''}">
+
+            <input type="hidden" th:name="apidetailId" id="apidetailId"
+                   th:value="${apidetail!=null?apidetail.apidetailId:''}">
 
             <div class="layui-form-item">
                 <div class="layui-input-inline" style="width: 200px">
@@ -247,7 +250,7 @@
             }
         };
 
-        let tab_tab = table.render({
+         table.render({
             elem: '#munu-table',
             url: '/template/selectTemplateByUser', //数据接口
             page: true,
@@ -316,6 +319,7 @@
             const index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
             //获取getMarkdown文本内容
             // alert(editor.getMarkdown());
+            console.log(data.field);
             $.ajax({
                 url: "/apidetail/addApi",
                 data: data.field,

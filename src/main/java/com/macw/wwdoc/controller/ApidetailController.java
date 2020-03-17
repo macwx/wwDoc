@@ -2,6 +2,8 @@ package com.macw.wwdoc.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.macw.wwdoc.Constant;
@@ -12,10 +14,7 @@ import com.macw.wwdoc.entity.vo.TreeSelectVo;
 import com.macw.wwdoc.mapper.CategoryMapper;
 import com.macw.wwdoc.service.IApidetailService;
 import com.macw.wwdoc.service.ICategoryService;
-import com.macw.wwdoc.util.DateUtil;
-import com.macw.wwdoc.util.FileUploadUtil;
-import com.macw.wwdoc.util.IntegerUtils;
-import com.macw.wwdoc.util.ResultUtil;
+import com.macw.wwdoc.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,8 +68,8 @@ public class ApidetailController extends BaseController {
             mv.addObject("apidetail", apidetail);
         }
         List<TreeSelectVo> treeSelectVos = getTreeSelectVos();
-        if (treeSelectVos.size()>0){
-            mv.addObject("treeSelectVos",treeSelectVos);
+        if (treeSelectVos.size() > 0) {
+            mv.addObject("treeSelectVos", treeSelectVos);
         }
 
         return mv;
@@ -83,27 +82,28 @@ public class ApidetailController extends BaseController {
      * @param apidetail
      * @return
      */
-    @Log(value = "添加API", type = "add")
+    @Log(value = "添加/更新API", type = "add/update")
     @RequestMapping("/addApi")
     public ResultUtil addApi(Apidetail apidetail) {
         User user = getUser();
+        String uuid = UUIDUtil.getUUID();
+        //添加API
         apidetail.setProjectId(getProId());
         apidetail.setCreateId(user.getUserId());
         apidetail.setCreateUser(user.getUserName());
         apidetail.setCreateTime(LocalDateTime.now());
-        apidetail.setIsNew(1);
-        Apidetail serviceOne = iApidetailService.getOne(new QueryWrapper<Apidetail>().lambda()
-                .eq(Apidetail::getCreateId, user.getUserId())
-                .eq(Apidetail::getTitle, apidetail.getTitle())
-                .eq(Apidetail::getCategoryId, apidetail.getCategoryId())
-                .eq(Apidetail::getProjectId, apidetail.getProjectId())
-                .eq(Apidetail::getIsNew, 1));
-        if (serviceOne != null) {
-            serviceOne.setIsNew(0);
-            apidetail.setVersion(serviceOne.getVersion() + 1);
-            iApidetailService.updateById(serviceOne);
+        apidetail.setRemark(uuid);
+        if (IntegerUtils.isNotBlank(apidetail.getApidetailId())) {
+            //更新API
+            Apidetail byId = iApidetailService.getById(apidetail.getApidetailId());
+            apidetail.setVersion(byId.getVersion() + 1);
+            apidetail.setRemark(byId.getRemark());
+            LambdaUpdateWrapper<Apidetail> updateWrapper = new UpdateWrapper<Apidetail>().lambda().eq(Apidetail::getApidetailId, apidetail.getApidetailId()).set(Apidetail::getIsNew, 0);
+            iApidetailService.update(updateWrapper);
         }
+        apidetail.setIsNew(1);
         return ResultUtil.flag(iApidetailService.save(apidetail));
+
     }
 
     /**
@@ -177,19 +177,21 @@ public class ApidetailController extends BaseController {
 
     /**
      * 查询API
+     *
      * @param apiId
      * @return
      */
     @RequestMapping("/apiView")
-    public ModelAndView apiView(Integer apiId){
+    public ModelAndView apiView(Integer apiId) {
         ModelAndView mv = new ModelAndView(thyme + "/docs/apis/apiView");
         Apidetail apidetail = iApidetailService.getById(apiId);
-        mv.addObject("api",apidetail);
+        mv.addObject("api", apidetail);
         return mv;
     }
 
     /**
      * 删除单个API
+     *
      * @param apiId
      * @return
      */
@@ -199,15 +201,15 @@ public class ApidetailController extends BaseController {
         return ResultUtil.flag(iApidetailService.removeById(apiId));
     }
 
-    @Log(value = "导出word",type = "export")
+    @Log(value = "导出word", type = "export")
     @RequestMapping("/export")
-    public void export(Integer apiId,HttpServletRequest request, HttpServletResponse response){
+    public void export(Integer apiId, HttpServletRequest request, HttpServletResponse response) {
         Apidetail apidetail = iApidetailService.getById(apiId);
-        Map<String,Object> params = new HashMap<>(16);
-        params.put("title",apidetail.getTitle());
-        params.put("author",apidetail.getCreateUser());
-        params.put("time", DateUtil.dateFormat(apidetail.getCreateTime(),DateUtil.dateTime));
+        Map<String, Object> params = new HashMap<>(16);
+        params.put("title", apidetail.getTitle());
+        params.put("author", apidetail.getCreateUser());
+        params.put("time", DateUtil.dateFormat(apidetail.getCreateTime(), DateUtil.dateTime));
         params.put("context", apidetail.getContext());
-        FileUploadUtil.exportWord("http://wwdoc.henaumcw.top/2020/03/14/13/41/16/a6e67290", System.getProperty("user.dir")+"/temp",apidetail.getTitle()+".docx",params,request,response);
+        FileUploadUtil.exportWord("http://wwdoc.henaumcw.top/2020/03/14/13/41/16/a6e67290", System.getProperty("user.dir") + "/temp", apidetail.getTitle() + ".docx", params, request, response);
     }
 }
