@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="views/include :: header('添加Api')"/>
+    <link rel="stylesheet" th:href="@{/plugins/editormd/css/editormd.css}"/>
+    <script type="text/javascript" th:src="@{/plugins/marked-master/lib/marked.js}"></script>
+    <style>
+        .layui-col-md8 {border:3px solid #f2f2f2;border-radius:5px;}
+        .layui-card {border:2px solid #f2f2f2;border-radius:5px;}
+        .icon {margin-right:10px;color:#1aa094;}
+        .icon-cray {color:#ffb800!important;}
+        .icon-blue {color:#1e9fff!important;}
+        .icon-tip {color:#ff5722!important;}
+        .layuimini-qiuck-module {text-align:center;margin-top: 10px}
+        .layuimini-qiuck-module a i {display:inline-block;width:100%;height:60px;line-height:60px;text-align:center;border-radius:2px;font-size:30px;background-color:#F8F8F8;color:#333;transition:all .3s;-webkit-transition:all .3s;}
+        .layuimini-qiuck-module a cite {position:relative;top:2px;display:block;color:#666;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;font-size:14px;}
+        .welcome-module {width:100%;height:210px;}
+        .panel {background-color:#fff;border:2px solid transparent;border-radius:3px;-webkit-box-shadow:0 1px 1px rgba(0,0,0,.05);box-shadow:0 1px 1px rgba(0,0,0,.05)}
+        .panel-body {padding:10px}
+        .panel-title {margin-top:0;margin-bottom:0;font-size:12px;color:inherit}
+        .label {display:inline;padding:.2em .6em .3em;font-size:75%;font-weight:700;line-height:1;color:#fff;text-align:center;white-space:nowrap;vertical-align:baseline;border-radius:.25em;margin-top: .3em;}
+        .layui-red {color:red}
+        .main_btn > p {height:40px;}
+        .layui-bg-number {background-color:#F8F8F8;}
+        .layuimini-notice:hover {background:#f6f6f6;}
+        .layuimini-notice {padding:7px 16px;clear:both;font-size:12px !important;cursor:pointer;position:relative;transition:background 0.2s ease-in-out;}
+        .layuimini-notice-title,.layuimini-notice-label {
+            padding-right: 70px !important;text-overflow:ellipsis!important;overflow:hidden!important;white-space:nowrap!important;}
+        .layuimini-notice-title {line-height:28px;font-size:14px;}
+        .layuimini-notice-extra {position:absolute;top:50%;margin-top:-8px;right:16px;display:inline-block;height:16px;color:#999;}
+    </style>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md8">
+
+                <div th:object="${api}" class="markdown-body editormd-html-preview" style="width: 90%">
+                    <h1 th:text="*{title}" style="text-align: center"></h1>
+                    <br>
+                    <textarea id="content" style="display:none;" th:text="*{context}"></textarea>
+                    <div id="result" style="width: 80%;float: left"></div>
+                </div>
+
+            </div>
+
+            <div class="layui-col-md4">
+
+            <!--    <div class="layui-card">
+                    <div class="layui-card-header">
+                        <h1>
+                        <i class="fa fa-bullhorn icon icon-tip"></i>系统公告
+                        </h1>
+                    </div>
+                </div>-->
+                    <div class="layui-card-body">
+                        <div class="layui-card-body">
+                            <div class="welcome-module">
+                                <div class="layui-row layui-col-space10 layuimini-qiuck">
+                                    <div class="layui-col-xs3 layuimini-qiuck-module">
+                                        <a href="javascript:;" data-iframe-tab="/project/listProject" data-title="所有项目" data-icon="fa fa-window-maximize">
+                                            <i class="fa fa-plus"></i>
+                                            <cite>创建接口</cite>
+                                        </a>
+                                    </div>
+                                    <div class="layui-col-xs3 layuimini-qiuck-module">
+                                        <a href="javascript:;" data-iframe-tab="/config/toConfig" data-title="系统设置" data-icon="fa fa-gears">
+                                            <i class="fa fa-edit"></i>
+                                            <cite>更新接口</cite>
+                                        </a>
+                                    </div>
+                                    <div class="layui-col-xs3 layuimini-qiuck-module">
+                                        <a href="javascript:;" data-iframe-tab="/log/toLogList" data-title="操作日志" data-icon="fa fa-file-text">
+                                            <i class="fa fa-folder-open-o"></i>
+                                            <cite>创建目录</cite>
+                                        </a>
+                                    </div>
+                                    <div class="layui-col-xs3 layuimini-qiuck-module">
+                                        <a href="javascript:;" data-iframe-tab="/team/toTeamList" data-title="我的团队" data-icon="fa fa-dot-circle-o">
+                                            <i class="layui-icon layui-icon-about"></i>
+                                            <cite>页面详情</cite>
+                                        </a>
+                                    </div>
+                                    <div class="layui-col-xs3 layuimini-qiuck-module">
+                                        <a href="javascript:;" data-iframe-tab="/teamMember/toJoinList" data-title="我的加入" data-icon="fa fa-calendar">
+                                            <i class="layui-icon layui-icon-export"></i>
+                                            <cite>导出</cite>
+                                        </a>
+                                    </div>
+                                    <div class="layui-col-xs3 layuimini-qiuck-module">
+                                        <a href="javascript:;" data-iframe-tab="page/404.html" data-title="更新日志" data-icon="fa fa-hourglass-end">
+                                            <i class="layui-icon layui-icon-log"></i>
+                                            <cite>历史记录</cite>
+                                        </a>
+                                    </div>
+                                    <div class="layui-col-xs3 layuimini-qiuck-module">
+                                        <a href="javascript:;" data-iframe-tab="/help/toHelp" data-title="公告列表" data-icon="fa fa-snowflake-o">
+                                            <i class="layui-icon layui-icon-share"></i>
+                                            <cite>分享</cite>
+                                        </a>
+                                    </div>
+                                    <div class="layui-col-xs3 layuimini-qiuck-module">
+                                        <a href="javascript:;" data-iframe-tab="/question/toQuestionList" data-title="反馈列表" data-icon="fa fa-shield">
+                                            <i class="layui-icon layui-icon-delete"></i>
+                                            <cite>删除</cite>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        //获取要转换的文字
+        var text = document.getElementById("content").value;
+        var rendererMD = new marked.Renderer();
+        marked.setOptions({
+            renderer: rendererMD,
+            gfm: true,//启动Github样式的Markdown，
+            tables: true, // 支持Github表格，必须打开gfm选项
+            breaks: true, //支持Github换行符，必须打开gfm选项
+            pedantic: false, //只解析符合markdown.pl定义的，不修正markdown的错误
+            sanitize: false, //原始输出，忽略HTML标签
+            smartLists: true, //优化列表输出
+            smartypants: false
+        });//基本设置
+        $('#result').html(marked(text));
+
+    })
+</script>
+</body>
+</html>

@@ -21,7 +21,40 @@
         LEFT JOIN api_category AS cate2 ON cate1.category_id = cate2.parent_id
         WHERE
         cate1.project_id = #{proId}
+        and cate1.parent_id = 0
 
+
+    </select>
+
+    <resultMap id="listMenuVoMap" type="com.macw.wwdoc.entity.vo.MenuVo">
+        <id column="mid" property="menuId"></id>
+        <result column="href" property="href"/>
+        <result column="title" property="title"/>
+        <result column="icon" property="icon"/>
+        <collection property="child" ofType="com.macw.wwdoc.entity.vo.MenuVo">
+            <id column="cid" property="menuId"></id>
+            <result column="chref" property="href"/>
+            <result column="ctitle" property="title"/>
+            <result column="cicon" property="icon"/>
+        </collection>
+    </resultMap>
+    <select id="listMenuVo" resultMap="listMenuVoMap">
+         SELECT
+            menu.category_id mid,
+            menu.url href,
+            menu.category_name title,
+            menu.icon icon,
+            child.category_id cid,
+            child.url chref,
+            child.category_name ctitle,
+            child.icon cicon
+            FROM
+            api_category AS menu
+            LEFT JOIN api_category AS child ON menu.category_id = child.parent_id
+            WHERE
+            menu.`create_id` = #{userId} AND
+            menu.parent_id = 0
+            ORDER BY menu.create_time DESC
 
     </select>
 </mapper>

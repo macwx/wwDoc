@@ -68,6 +68,11 @@ public class ApidetailController extends BaseController {
             Apidetail apidetail = iApidetailService.getById(apiId);
             mv.addObject("apidetail", apidetail);
         }
+        List<TreeSelectVo> treeSelectVos = getTreeSelectVos();
+        if (treeSelectVos.size()>0){
+            mv.addObject("treeSelectVos",treeSelectVos);
+        }
+
         return mv;
     }
 
@@ -135,25 +140,8 @@ public class ApidetailController extends BaseController {
      * @return
      */
     @RequestMapping("/getTreeSelectVos")
-    public List<TreeSelectVo> getTreeSelectVos(Integer  id) {
+    public List<TreeSelectVo> getTreeSelectVos() {
         List<TreeSelectVo> treeSelectVos = categoryMapper.listTreeSelectVo(getProId());
-        for (TreeSelectVo treeSelectVo : treeSelectVos) {
-            treeSelectVo.setOpen(true);
-            treeSelectVo.setChecked(false);
-
-            if (treeSelectVo.getId().equals(id)) {
-                treeSelectVo.setChecked(true);
-            }
-            List<TreeSelectVo> children = treeSelectVo.getChildren();
-            for (TreeSelectVo child : children) {
-                child.setChecked(false);
-                child.setOpen(true);
-                if (child.getId().equals(id)) {
-                    child.setChecked(true);
-                }
-            }
-        }
-
         return treeSelectVos;
     }
 
@@ -188,8 +176,20 @@ public class ApidetailController extends BaseController {
     }
 
     /**
+     * 查询API
+     * @param apiId
+     * @return
+     */
+    @RequestMapping("/apiView")
+    public ModelAndView apiView(Integer apiId){
+        ModelAndView mv = new ModelAndView(thyme + "/docs/apis/apiView");
+        Apidetail apidetail = iApidetailService.getById(apiId);
+        mv.addObject("api",apidetail);
+        return mv;
+    }
+
+    /**
      * 删除单个API
-     *
      * @param apiId
      * @return
      */

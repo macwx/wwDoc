@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.macw.wwdoc.entity.Config;
 import com.macw.wwdoc.entity.Menu;
+import com.macw.wwdoc.entity.User;
 import com.macw.wwdoc.entity.vo.MenuVo;
 import com.macw.wwdoc.mapper.MenuMapper;
+import com.macw.wwdoc.service.ICategoryService;
 import com.macw.wwdoc.service.IConfigService;
 import com.macw.wwdoc.service.IMenuService;
 import org.slf4j.Logger;
@@ -30,7 +32,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/menu")
-public class MenuController {
+public class MenuController extends BaseController{
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -39,6 +41,9 @@ public class MenuController {
 
     @Resource
     private IConfigService iConfigService;
+
+    @Resource
+    private ICategoryService iCategoryService;
 
     @RequestMapping("/index")
     public Map index(){
@@ -75,8 +80,9 @@ public class MenuController {
     }
 
     @RequestMapping("/doc")
-    public Map doc(Integer identify){
-        MenuVo menuVo2 = iMenuService.listMenuVo(2,"返回项目列表","fa fa-undo");
+    public Map doc(){
+        User user = getUser();
+        MenuVo menuVo2 = iCategoryService.listMenuVo(user.getUserId(),"返回项目列表","fa fa-undo");
         Map<String,Object> map2 = new HashMap<>(16);
         map2.put("docs", menuVo2);
 

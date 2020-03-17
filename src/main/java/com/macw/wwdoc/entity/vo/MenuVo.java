@@ -17,10 +17,12 @@ import java.util.List;
 
 /**
  * 首页菜单
+ * @author Administrator
  */
 @Data
 public class MenuVo {
 
+    private Integer menuId;
     private String title;
     private String icon;
     private String href;

@@ -78,7 +78,7 @@ public class UserController extends BaseController {
         }
         //判断验证码是否有限
         Session session = getSession();
-        if (!session.getAttribute("captchaCode").equals(captchaCode)) {
+        if (!captchaCode.equals(session.getAttribute("captchaCode"))) {
             return ResultUtil.error("验证码错误或已过期！");
         }
         //清除session中的验证码

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="html/include :: header('wwDoc-首页')"/>
+    <meta name="viewport"
+          content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+</head>
+<body>
+<th:block th:include="html/nav"/>
+<!-- main部分 -->
+<div class="tlinks">Collect from <a href="http://www.cssmoban.com/">网页模板</a></div>
+<div class="main-product">
+    <div class="layui-container">
+        <p class="title">专为开发者提供的<span>在线文档</span></p>
+        <div class="layui-row layui-col-space25">
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="content">
+                    <div><img th:src="@{/img/Big_icon1.png}"></div>
+                    <div>
+                        <p class="label">开源免费</p>
+                        <p>代码永久开源，可作为SpringBoot学习案例。你可以选择将wwDoc部署到你的服务器,另外项目会不定时进行更新的。</p>
+                    </div>
+                    <a href="/wwDoc">进入系统></a>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3 ">
+                <div class="content">
+                    <div><img th:src="@{/img/Big_icon2.png}"></div>
+                    <div>
+                        <p class="label">团队协作</p>
+                        <p>wwDoc是一款开发接口管理应用，成员在这里编写和共享文档。可协作的结构化文档</p>
+                    </div>
+                    <a href="/wwDoc">进入系统></a>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3 ">
+                <div class="content">
+                    <div><img th:src="@{/img/Big_icon3.png}"></div>
+                    <div>
+                        <p class="label">导入 / 导出</p>
+                        <p>将已有的文档内容快速导出自动形成文档，并且可以按需导出为线下Word保存</p>
+                    </div>
+                    <a href="/wwDoc">进入系统></a>
+                </div>
+            </div>
+            <div class="layui-col-sm6 layui-col-md3 ">
+                <div class="content">
+                    <div><img th:src="@{/img/Big_icon4.png}"></div>
+                    <div>
+                        <p class="label">模板</p>
+                        <p>丰富的内置模板帮助你免去内容框架和格式的困扰，如仍不满足可自定义模板内容</p>
+                    </div>
+                    <a href="/wwDoc">进入系统></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-service">
+    <div class="layui-container">
+        <p class="title">实现简洁轻快的<span>文档操作</span></p>
+        <div class="layui-row layui-col-space25 layui-col-space80">
+            <div class="layui-col-sm6">
+                <div class="content">
+                    <div class="content-left"><img th:src="@{/img/home_img1.jpg}"></div>
+                    <div class="content-right">
+                        <p class="label">说明文档</p>
+                        <span></span>
+                        <p>你完全可以使用 wwDoc来编写一些工具的说明书
+                            也可以编写一些技术规范说明文档以供团队查阅</p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6">
+                <div class="content">
+                    <div class="content-left"><img th:src="@{/img/home_img2.jpg}"></div>
+                    <div class="content-right">
+                        <p class="label">数据字典</p>
+                        <span></span>
+                        <p>好的数据字典可以很方便地向别人描述你的数据库结构
+                            用wwDoc可以编辑出美观的数据字典</p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6">
+                <div class="content">
+                    <div class="content-left"><img th:src="@{img/home_img3.jpg}"></div>
+                    <div class="content-right">
+                        <p class="label">团队协作</p>
+                        <span></span>
+                        <p>团队权限管理机制让团队良好地协同编写文档，大幅提升开发效率。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-sm6">
+                <div class="content">
+                    <div class="content-left"><img th:src="@{img/home_img4.jpg}"></div>
+                    <div class="content-right">
+                        <p class="label">在线托管</p>
+                        <span></span>
+                        <p>提供安全稳定的在线文档托管服务
+                            你可以放心地选择托管你的文档数据在云端</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="service-more"><a href="">查看更多</a></div>
+    </div>
+</div>
+<th:block th:include="html/footer"/>
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script>
+    /**
+
+     @Name: layuiNetCompany -
+     @Author: xuxingyu
+     @Copyright: layui.com
+
+     */
+
+    layui.define(['jquery', 'element', 'carousel', 'laypage'], function (exports) {
+        var $ = layui.jquery
+            , element = layui.element
+            , carousel = layui.carousel
+            , laypage = layui.laypage;
+
+        //轮播渲染
+        carousel.render({
+            elem: '#banner'
+            , width: '100%'
+            , height: '898px'
+            , arrow: 'always'
+        });
+
+        //滚动监听
+        $(window).scroll(function () {
+            var scr = $(document).scrollTop();
+            scr > 0 ? $(".nav").addClass('scroll') : $(".nav").removeClass('scroll');
+        });
+
+        //轮播文字
+        $(function () {
+            $('.banner').children('.title').addClass('active');
+        })
+
+        //导航切换
+        var btn = $('.nav').find('.nav-list').children('button')
+            , spa = btn.children('span')
+            , ul = $('.nav').find('.nav-list').children('.layui-nav');
+        btn.on('click', function () {
+            if (!$(spa[0]).hasClass('spa1')) {
+                spa[0].className = 'spa1';
+                spa[1].style.display = 'none';
+                spa[2].className = 'spa3';
+                $('.nav')[0].style.height = 90 + ul[0].offsetHeight + 'px';
+            } else {
+                spa[0].className = '';
+                spa[1].style.display = 'block';
+                spa[2].className = '';
+                $('.nav')[0].style.height = 80 + 'px';
+            }
+        });
+
+        //关于内容
+        $('.main-about').find('.aboutab').children('li').each(function (index) {
+            $(this).on('click', function () {
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+                $('.aboutab').siblings().fadeOut("fast");
+                $('.aboutab').siblings().eq(index).fadeIn("");
+            });
+        });
+
+        //动态分页
+        laypage.render({
+            elem: 'newsPage'
+            , count: 50
+            , theme: '#2db5a3'
+            , layout: ['page', 'next']
+        });
+
+        //案例分页
+        laypage.render({
+            elem: 'casePage'
+            , count: 50
+            , theme: '#2db5a3'
+            , layout: ['page', 'next']
+        });
+
+        //新闻字段截取
+        $(function () {
+            $(".main-news").find(".content").each(function () {
+                var span = $(this).find(".detail").children("span")
+                    , spanTxt = span.html();
+                if (document.body.clientWidth > 463) {
+                    span.html(spanTxt);
+                } else {
+                    span.html(span.html().substring(0, 42) + '...')
+                }
+                ;
+                $(window).resize(function () {
+                    if (document.body.clientWidth > 463) {
+                        span.html(spanTxt);
+                    } else {
+                        span.html(span.html().substring(0, 42) + '...')
+                    }
+                    ;
+                });
+            });
+        });
+
+        exports('firm', {});
+    });
+</script>
+</body>
+</html>

@@ -18,6 +18,13 @@ import java.util.Map;
  */
 public interface IMenuService extends IService<Menu> {
 
+    /**
+     * 首页菜单
+     * @param identify
+     * @param title
+     * @param icon
+     * @return
+     */
     MenuVo listMenuVo(Integer identify,String title,String icon);
 
 }

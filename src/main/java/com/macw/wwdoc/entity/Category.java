@@ -62,6 +62,11 @@ public class Category implements Serializable {
      */
     private String url;
 
+    /**
+     * 图标
+     */
+    private String icon;
+
 
     /**
      * 创建时间

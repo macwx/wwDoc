@@ -24,7 +24,8 @@ public class IndexController  extends BaseController {
     @RequestMapping({"/","/index",""})
     public ModelAndView index(){
 //        return "doc/index";
-        return new ModelAndView(thyme + "/user/login");
+//        return new ModelAndView(thyme + "/user/login");
+        return new ModelAndView( "html/index");
     }
 
     @RequestMapping("/wwDoc")
@@ -33,6 +34,11 @@ public class IndexController  extends BaseController {
         User user = getUser();
         mv.addObject("user",user);
         return mv;
+    }
+
+    @RequestMapping("/index/about")
+    public ModelAndView toAbout(){
+        return new ModelAndView("html/about");
     }
 
     @RequestMapping("/404")

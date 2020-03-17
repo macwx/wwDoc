@@ -1,0 +1,55 @@
+<!-- nav部分 -->
+<div class="nav index">
+    <div class="layui-container">
+        <!-- 公司logo -->
+        <div class="nav-logo">
+            <a href="index.html">
+                <img th:src="@{/img/LOGO5.png}" alt="wwDoc">
+            </a>
+        </div>
+        <div class="nav-list">
+            <button>
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="layui-nav" lay-filter="">
+                <li class="layui-nav-item layui-this"><a href="">首页</a></li>
+                <li class="layui-nav-item"><a href="product.html">帮助</a></li>
+                <li class="layui-nav-item"><a href="https://gitee.com/macw/wwdoc" target="_blank">下载</a></li>
+                <li class="layui-nav-item"><a href="/index/about">关于</a></li>
+                <li class="layui-nav-item"><a href="/user/toLogin">登录/注册</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- banner部分 -->
+<div>
+    <div class="layui-carousel" id="banner">
+        <div carousel-item>
+            <div>
+                <img th:src="@{/img/banner1.jpg}">
+                <div class="panel">
+                    <p class="title">wwDoc</p>
+                    <p>在线API文档
+                    <hr/>
+                    </p>
+                    <h2><a href="/wwDoc">
+                        <button class="layui-btn layui-btn-lg  layui-btn-warm layui-btn-radius ">进入系统</button>
+                    </a></h2>
+
+                </div>
+            </div>
+            <div>
+                <img th:src="@{/img/banner2.jpg}">
+                <div class="panel">
+                    <p class="title">wwDoc</p>
+                    <p>在线API文档
+                    <hr/>
+                    </p>
+                    <h2><a href="/wwDoc">
+                        <button class="layui-btn layui-btn-lg  layui-btn-warm layui-btn-radius ">进入系统</button>
+                    </a></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

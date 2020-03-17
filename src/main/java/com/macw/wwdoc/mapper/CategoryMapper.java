@@ -2,6 +2,7 @@ package com.macw.wwdoc.mapper;
 
 import com.macw.wwdoc.entity.Category;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.macw.wwdoc.entity.vo.MenuVo;
 import com.macw.wwdoc.entity.vo.TreeSelectVo;
 
 import java.util.List;
@@ -22,5 +23,12 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @return
      */
     List<TreeSelectVo> listTreeSelectVo(Integer proId);
+
+    /**
+     * doc 分类菜单
+     * @param userId
+     * @return
+     */
+    List<MenuVo> listMenuVo(Integer userId);
 
 }
