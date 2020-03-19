@@ -32,15 +32,24 @@
                     <label class="layui-form-label required layui-bg-blue">目录:</label>
                     <div class="layui-input-inline" style="width: 500px;text-align: left">
                         <select th:name="categoryId">
-                            <option value="" >请选择所属分类</option>
+                            <option value="">请选择所属分类</option>
                             <span th:each="list:${treeSelectVos}">
-                                        <option th:value="${list.id}" th:text="${list.name}" th:selected="${list.id == apidetail.categoryId}">
-                                        </option>
+    <div th:switch="${apidetail != null }">
+        <div th:case="true"> <option th:value="${list.id}" th:text="${list.name}"  th:selected="${list.id == apidetail.categoryId  }"></option></div>
+         <div th:case="false"> <option th:value="${list.id}" th:text="${list.name}"> </option>  </div>
+    </div>
+
                                     <span th:if="${not  #lists.isEmpty(list.children) || list.children=='null'}">
                                         <optgroup th:label="${list.name}" style="margin-left: 20px">
                                             <span th:each="child:${list.children}">
-                                                <option th:value="${child.id}" th:text="${child.name}" th:selected="${child.id == apidetail.categoryId }">
-                                                </option>
+
+
+                                                    <div th:switch="${apidetail != null }">
+                                                         <div th:case="false"> <option th:value="${child.id}" th:text="${child.name}"> </option>  </div>
+                                                        <div th:case="true"> <option th:value="${child.id}" th:text="${child.name}"  th:selected="${child.id == apidetail.categoryId  }"></option></div>
+                                                    </div>
+
+
                                             </span>
 
                                         </optgroup>
@@ -250,7 +259,7 @@
             }
         };
 
-         table.render({
+        table.render({
             elem: '#munu-table',
             url: '/template/selectTemplateByUser', //数据接口
             page: true,

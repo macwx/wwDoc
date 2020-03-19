@@ -78,7 +78,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         if (list.size() > 0) {
             for (Apidetail apidetail : list) {
                 MenuVo vo = new MenuVo();
-                vo.setHref("");
+                vo.setHref("/apidetail/apiView?apiId="+apidetail.getApidetailId());
                 vo.setTitle(apidetail.getTitle());
                 vo.setTarget("_self");
                 vo.setIcon("fa fa-file-text-o");
