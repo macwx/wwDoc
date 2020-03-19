@@ -9,6 +9,7 @@ import com.macw.wwdoc.entity.User;
 import com.macw.wwdoc.service.ICategoryService;
 import com.macw.wwdoc.util.IntegerUtils;
 import com.macw.wwdoc.util.ResultUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +71,10 @@ public class CategoryController extends BaseController {
     @RequestMapping("/addCategory")
     public ResultUtil addCategory(Category category, Integer parentIds, Integer cids) {
         User user = getUser();
+
+        if (StringUtils.isNotBlank(category.getIcon())){
+            category.setIcon("fa "+category.getIcon());
+        }
         if (IntegerUtils.isBlank(cids)) {
             if (IntegerUtils.isBlank(parentIds)) {
                 category.setParentId(0);

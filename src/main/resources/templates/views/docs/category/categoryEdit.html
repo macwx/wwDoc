@@ -43,6 +43,16 @@
                     </div>
                 </div>
             </div>
+
+            <div class="layui-form-item">
+                <label  class="layui-form-label">选择图标</label>
+                <div class="layui-input-block">
+                    <input type="text" id="iconPicker" th:name="icon" lay-filter="iconPicker" class="hide">
+                </div>
+            </div>
+
+
+
             <div th:if="${categoryId != null}">
                 <input th:id="parentIds" type="hidden" th:value="${categoryId}">
             </div>
@@ -55,11 +65,33 @@
     </div>
 </div>
 <script>
-    layui.use(['form', 'layuimini'], function () {
+    layui.use(['form','iconPickerFa', 'layuimini'], function () {
         var form = layui.form,
             layer = layui.layer,
             $ = layui.jquery,
+            iconPickerFa = layui.iconPickerFa,
             layuimini = layui.layuimini;
+
+        iconPickerFa.render({
+            // 选择器，推荐使用input
+            elem: '#iconPicker',
+            // fa 图标接口
+            url: "layuimini/lib/font-awesome-4.7.0/less/variables.less",
+            // 是否开启搜索：true/false，默认true
+            search: true,
+            // 是否开启分页：true/false，默认true
+            page: true,
+            // 每页显示数量，默认12
+            limit: 12,
+            // 点击回调
+            click: function (data) {
+                console.log(data);
+            },
+            // 渲染成功后的回调
+            success: function (d) {
+                console.log(d);
+            }
+        });
 
 
         //监听提交
