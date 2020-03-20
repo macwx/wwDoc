@@ -60,6 +60,8 @@ mybatis-plus:
 
 logging:
   config: classpath:logback.xml
+  level:
+    org.thymeleaf: info
 
 
 
