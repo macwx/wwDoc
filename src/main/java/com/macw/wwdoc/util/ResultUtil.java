@@ -1,6 +1,7 @@
 package com.macw.wwdoc.util;
 
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,8 @@ public class ResultUtil<T> {
 	private boolean se;
 	
 	private T data;
+
+	private HttpStatus status;
 	
 	private Long count= 0L;
 	
@@ -67,6 +70,16 @@ public class ResultUtil<T> {
 		result.setMsg(msg);
 		return result;
 	}
+
+	public static <T>ResultUtil<T> error(HttpStatus status,String msg) {
+		ResultUtil<T> result = new ResultUtil();
+		result.setCode(errorCode);
+		result.setStatus(status);
+		result.setSe(false);
+		result.setMsg(msg);
+		return result;
+	}
+
 	public static <T>ResultUtil<T> ok(String msg) {
 		ResultUtil result = new ResultUtil();
 		result.setCode(layuiCode);

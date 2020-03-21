@@ -1,4 +1,4 @@
-package com.macw.wwdoc.realm;
+package com.macw.wwdoc.shiro.realm;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
