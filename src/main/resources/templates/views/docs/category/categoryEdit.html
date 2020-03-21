@@ -120,7 +120,8 @@
                             time: 1000
                         }, function () {
                             parent.layer.close(index);
-                            parent.location.reload();
+                            // parent.location.reload();
+                            top.window.location.reload();
                         });
                     } else {
                         layer.msg(data.msg, {
