@@ -193,42 +193,42 @@
                                     </a>
                                 </div>
                                 <div class="layui-col-xs3 layuimini-qiuck-module">
-                                    <a href="javascript:;" data-iframe-tab="/log/toLogList" data-title="创建目录"
+                                    <a href="javascript:;" data-iframe-tab="/category/toAddCategory" data-title="创建目录"
                                        data-icon="fa fa-file-text">
                                         <i class="fa fa-folder-open-o"></i>
                                         <cite>创建目录</cite>
                                     </a>
                                 </div>
                                 <div class="layui-col-xs3 layuimini-qiuck-module">
-                                    <a href="javascript:;" data-iframe-tab="/team/toTeamList" data-title="页面详情"
+                                    <a href="javascript:;"  id="page_detail" data-title="页面详情"
                                        data-icon="fa fa-dot-circle-o">
                                         <i class="layui-icon layui-icon-about"></i>
                                         <cite>页面详情</cite>
                                     </a>
                                 </div>
                                 <div class="layui-col-xs3 layuimini-qiuck-module">
-                                    <a href="javascript:;" data-iframe-tab="/teamMember/toJoinList" data-title="导出"
+                                    <a href="javascript:;" id="export" data-title="导出"
                                        data-icon="fa fa-calendar">
                                         <i class="layui-icon layui-icon-export"></i>
                                         <cite>导出</cite>
                                     </a>
                                 </div>
                                 <div class="layui-col-xs3 layuimini-qiuck-module">
-                                    <a href="javascript:;" data-iframe-tab="page/404.html" data-title="历史记录"
+                                    <a href="javascript:;" data-iframe-tab="/apidetail/listApi" data-title="历史记录"
                                        data-icon="fa fa-hourglass-end">
                                         <i class="layui-icon layui-icon-log"></i>
                                         <cite>历史记录</cite>
                                     </a>
                                 </div>
                                 <div class="layui-col-xs3 layuimini-qiuck-module">
-                                    <a href="javascript:;" data-iframe-tab="/help/toHelp" data-title="分享"
+                                    <a href="javascript:;" id="page_share" data-title="分享"
                                        data-icon="fa fa-snowflake-o">
                                         <i class="layui-icon layui-icon-share"></i>
                                         <cite>分享</cite>
                                     </a>
                                 </div>
                                 <div class="layui-col-xs3 layuimini-qiuck-module">
-                                    <a href="javascript:;" data-iframe-tab="/question/toQuestionList" data-title="删除"
+                                    <a href="javascript:;" id="page_del" data-title="删除"
                                        data-icon="fa fa-shield">
                                         <i class="layui-icon layui-icon-delete"></i>
                                         <cite>删除</cite>
@@ -250,9 +250,79 @@
             layuimini = layui.layuimini,
             table = layui.table;
 
+        var id = $("#apiId").val();
         //更新接口
         $("#to_update").click(function () {
-            window.location.href = "/apidetail/toApiAdd?apiId="+$("#apiId").val();
+            window.location.href = "/apidetail/toApiAdd?apiId="+id;
+        });
+
+        //页面详情
+        $("#page_detail").click(function () {
+            $.ajax({
+                url: "/apidetail/getOne?apiId="+id,
+                type: "post",
+                //4.接收后台修改响应回来的数据；关闭弹出层、提示修改信息、刷新table
+                success: function (data) {
+                    if (data != null) {
+                        layer.msg("本页面由 "+data.createUser +" 在 " + data.createTime +"时创建！", {
+                            offset: '15px',
+                            icon: 6,
+                            time: 3000
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 2000
+                        });
+                    }
+                }
+            })
+        });
+
+        //导出
+        $("#export").click(function () {
+            $.ajax({
+                url: "/apidetail/export?apiId="+id,
+                type: "post"
+            })
+        });
+
+        //分享
+        $("#page_share").click(function () {
+            layer.msg("正在开发中，请耐心等待！", {
+                offset: '15px',
+                icon: 6,
+                time: 3000
+            });
+        });
+
+        //删除
+        $("#page_del").click(function () {
+            layer.confirm('确认删除该API吗？', function (index) {
+                $.ajax({
+                    url: '/apidetail/deleteOne?apiId='+id,
+                    type: 'post',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.code == 0) {
+                            layer.msg(data.msg, {
+                                offset: '15px',
+                                icon: 6,
+                                time: 1000
+                            }, function () {
+                               top.window.location.reload();
+                            });
+                        } else {
+                            layer.msg(data.msg, {
+                                icon: 5,
+                                time: 2000
+                            });
+                        }
+                    }, error: function (data) {
+                        layer.msg("操作失败", {time: 1000, icon: 5});
+                    }
+                });
+            });
         });
 
 

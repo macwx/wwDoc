@@ -22,6 +22,14 @@ public interface ICategoryService extends IService<Category> {
      * @param icon
      * @return
      */
-    MenuVo listMenuVo(Integer userId,String title,String icon);
+    MenuVo listMenuVo(Integer userId,Integer proId,String title,String icon);
+
+    /**
+     * 分类菜单
+     * @param userId
+     * @param proId
+     * @return
+     */
+    List<MenuVo> listMenuVo(Integer userId,Integer proId);
 
 }

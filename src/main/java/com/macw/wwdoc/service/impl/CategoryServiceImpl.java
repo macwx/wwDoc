@@ -9,6 +9,8 @@ import com.macw.wwdoc.mapper.MenuMapper;
 import com.macw.wwdoc.service.IApidetailService;
 import com.macw.wwdoc.service.ICategoryService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.macw.wwdoc.util.IntegerUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,10 +37,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Resource
     private IApidetailService iApidetailService;
 
+
+
     @Override
-    public MenuVo listMenuVo(Integer userId, String title, String icon) {
-        List<MenuVo> menuVos = categoryMapper.listMenuVo(userId);
+    public MenuVo listMenuVo(Integer userId,Integer proId, String title, String icon) {
+        List<MenuVo> menuVos = this.listMenuVo(userId,proId);
         List<MenuVo> menuVoList = menuMapper.listMenuVo(2);
+        List<MenuVo> listMenuVo = iApidetailService.listMenuVo(proId);
+        menuVos.addAll(listMenuVo);
         menuVos.addAll(menuVoList);
         for (MenuVo menuVo : menuVos) {
             List<MenuVo> childApi = childApi(menuVo.getMenuId());
@@ -72,13 +78,30 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         return menuVo;
     }
 
+    @Override
+    public List<MenuVo> listMenuVo(Integer userId, Integer proId) {
+        List<MenuVo> menuVos = this.baseMapper.listMenuVo(userId, proId);
+        for (MenuVo menuVo : menuVos) {
+            menuVo.setHref("/menu/to404");
+            List<MenuVo> child = menuVo.getChild();
+            for (MenuVo vo : child) {
+                vo.setHref("/menu/to404");
+            }
+        }
+        return menuVos;
+    }
+
     private List<MenuVo> childApi(Integer menuId) {
         List<Apidetail> list = iApidetailService.list(new QueryWrapper<Apidetail>().lambda().eq(Apidetail::getCategoryId, menuId));
         List<MenuVo> menuVoChild = new ArrayList<>();
         if (list.size() > 0) {
             for (Apidetail apidetail : list) {
                 MenuVo vo = new MenuVo();
-                vo.setHref("/apidetail/apiView?apiId="+apidetail.getApidetailId());
+                if (IntegerUtils.isNotBlank(apidetail.getApidetailId())){
+                    vo.setHref("/apidetail/apiView?apiId="+apidetail.getApidetailId());
+                }else {
+                    vo.setHref("/menu/to404");
+                }
                 vo.setTitle(apidetail.getTitle());
                 vo.setTarget("_self");
                 vo.setIcon("fa fa-file-text-o");

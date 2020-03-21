@@ -53,7 +53,8 @@
             LEFT JOIN api_category AS child ON menu.category_id = child.parent_id
             WHERE
             menu.`create_id` = #{userId} AND
-            menu.parent_id = 0
+            menu.parent_id = 0 AND
+            menu.project_id = #{proId}
             ORDER BY menu.create_time DESC
 
     </select>

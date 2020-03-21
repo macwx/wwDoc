@@ -188,6 +188,17 @@ public class ApidetailController extends BaseController {
         mv.addObject("api", apidetail);
         return mv;
     }
+    /**
+     * 查询API
+     *
+     * @param apiId
+     * @return
+     */
+    @RequestMapping("/getOne")
+    public ResultUtil getOne(Integer apiId) {
+        Apidetail apidetail = iApidetailService.getById(apiId);
+        return ResultUtil.success(apidetail);
+    }
 
     /**
      * 删除单个API

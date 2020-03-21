@@ -2,4 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.macw.wwdoc.mapper.ApidetailMapper">
 
+    <resultMap id="listMenuVoMap" type="com.macw.wwdoc.entity.vo.MenuVo">
+        <id column="id" property="menuId"></id>
+        <result column="" property="href"/>
+        <result column="title" property="title"/>
+        <result column="" property="icon"/>
+        <collection property="child" ofType="com.macw.wwdoc.entity.vo.MenuVo">
+            <result column="" property="href"/>
+            <result column="" property="title"/>
+            <result column="" property="icon"/>
+        </collection>
+    </resultMap>
+    <select id="listMenuVo"  resultMap="listMenuVoMap">
+        SELECT
+            api_apidetail.apidetail_id id,
+            api_apidetail.title
+        FROM
+            api_apidetail
+        WHERE
+            api_apidetail.category_id is NULL
+         AND
+            api_apidetail.project_id = #{proId}
+    </select>
 </mapper>

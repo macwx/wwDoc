@@ -127,7 +127,11 @@
             },
             pro_name: function () {
                 var ss = $(this).next().val();
-                window.location.href = "/project/toDocs?proId=" + ss;
+                $.ajax({
+                    url: "/project/toDocs",
+                    data: {"proId=":ss},
+                    type: "post",
+                });
             },
             num_set: function () {
                 window.location.href = "/team/toTeamList";

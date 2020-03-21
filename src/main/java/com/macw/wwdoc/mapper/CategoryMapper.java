@@ -29,6 +29,6 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @param userId
      * @return
      */
-    List<MenuVo> listMenuVo(Integer userId);
+    List<MenuVo> listMenuVo(Integer userId,Integer proId);
 
 }

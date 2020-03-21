@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -82,12 +83,18 @@ public class MenuController extends BaseController{
     @RequestMapping("/doc")
     public Map doc(){
         User user = getUser();
-        MenuVo menuVo2 = iCategoryService.listMenuVo(user.getUserId(),"返回项目列表","fa fa-undo");
+        Integer proId = getProId();
+        MenuVo menuVo2 = iCategoryService.listMenuVo(user.getUserId(),proId,"返回项目列表","fa fa-undo");
         Map<String,Object> map2 = new HashMap<>(16);
         map2.put("docs", menuVo2);
 
         Map map = info();
         map.put("menuInfo",map2);
         return map;
+    }
+
+    @RequestMapping("/to404")
+    public ModelAndView to404(){
+        return new ModelAndView(thyme+"/docs/category/404");
     }
 }
