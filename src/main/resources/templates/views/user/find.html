@@ -2,14 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <th:block th:include="views/include :: header('后台管理-登陆')"/>
+    <th:block th:include="views/include :: header('wwDoc-找回密码')"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" th:href="@{layuimini/lib/layui-v2.5.5/css/layui.css}" media="all">
     <style>
         html, body {
             width: 100%;
@@ -117,18 +116,21 @@
         <div class="layui-form login-form">
             <form class="layui-form" action="">
                 <div class="layui-form-item logo-title">
-                    <h1>wwDoc系统登录</h1>
+                    <h1>找回密码</h1>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-inline" style="width: 318px">
+                        <a href="/user/toLogin" style=" display: inline-block;padding: 7px 5px 0px 0px;color: #666; "  ><<<返回登录</a>
+    <br/>
+    <br/>
+                    </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-username"></label>
-                    <input type="text" name="username" lay-verify="required|account" placeholder="用户名或者邮箱"
+                    <input type="text" name="email" lay-verify="required|email" placeholder="请输入要找回的邮箱"
                            autocomplete="off" class="layui-input">
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-icon layui-icon-password"></label>
-                    <input type="password" name="password" lay-verify="required|password" placeholder="密码"
-                           autocomplete="off" class="layui-input">
-                </div>
+
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-vercode"></label>
                     <input type="text" name="captchaCode" value="" lay-verify="required|captcha" placeholder="图形验证码"
@@ -137,14 +139,10 @@
                         <img id="captchaPic" src="/user/captcha">
                     </div>
                 </div>
+                <br/>
+                <br/>
                 <div class="layui-form-item">
-                    <div class="layui-input-inline" style="width: 318px">
-                        <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">
-                        <a href="/user/toFind" style=" display: inline-block;padding: 7px 5px 0px 0px;color: #666; float: right"  >忘记密码？</a>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="login">登 入</button>
+                    <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="login">发送邮件</button>
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-inline" style="width: 318px">
@@ -185,14 +183,7 @@
         // 进行登录操作
         form.on('submit(login)', function (data) {
             data = data.field;
-            if (data.username == '') {
-                layer.msg('用户名不能为空');
-                return false;
-            }
-            if (data.password == '') {
-                layer.msg('密码不能为空');
-                return false;
-            }
+
             if (data.captcha == '') {
                 layer.msg('验证码不能为空');
                 return false;
@@ -200,16 +191,14 @@
             $.ajax({
                 type: "POST",
                 //这个路径根据自己的情况填写
-                url: '/user/userLogin',
+                url: '/user/sendEmail',
                 data: data,
                 success: function (data) {
                     console.log(data);
                     if (data.code == 0) {
-                        layer.msg('登录成功', {
+                        layer.msg('邮件发送成功', {
                             icon: 6,
                             time: 1000 //2秒关闭（如果不配置，默认是3秒）
-                        }, function () {
-                            window.location = '/wwDoc';
                         });
                     } else {
                         layer.msg(data.msg, {

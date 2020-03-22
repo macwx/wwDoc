@@ -44,6 +44,18 @@ spring:
     restart:
       # 热部署开关
       enabled: true
+  # 邮件服务
+# 邮箱配置
+  mail:
+    host: smtp.163.com
+  # 你的163邮箱
+    username: macw37924@163.com
+  # 注意这里不是邮箱密码，而是SMTP授权密码
+    password: QKSKAENUJGYCLSHY
+    port: 25
+    protocol: smtp
+    default-encoding: UTF-8
+
 
 # MyBatis
 mybatis-plus:

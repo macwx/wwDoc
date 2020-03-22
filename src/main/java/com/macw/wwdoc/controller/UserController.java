@@ -5,9 +5,7 @@ import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.CircleCaptcha;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.macw.wwdoc.Constant;
-import com.macw.wwdoc.entity.Log;
-import com.macw.wwdoc.entity.Team;
-import com.macw.wwdoc.entity.User;
+import com.macw.wwdoc.entity.*;
 import com.macw.wwdoc.service.*;
 import com.macw.wwdoc.util.DigestUtils;
 import com.macw.wwdoc.util.IpAddressUtil;
@@ -20,7 +18,6 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -28,10 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,6 +65,12 @@ public class UserController extends BaseController {
 
     @Resource
     private IProjectService iProjectService;
+
+    @Resource
+    private ICategoryService iCategoryService;
+
+    @Resource
+    private IMailService iMailService;
 
     @RequestMapping("/toLogin")
     public ModelAndView toLogin() {
@@ -216,7 +222,7 @@ public class UserController extends BaseController {
      */
     @RequestMapping("/register")
     public ResultUtil register(User user, String captchaCode){
-        //判断验证码是否有限
+        //判断验证码是否有效
         Session session = getSession();
         if (!session.getAttribute("captchaCode").equals(captchaCode)) {
             return ResultUtil.error("验证码错误或已过期！");
@@ -230,7 +236,98 @@ public class UserController extends BaseController {
         }
         user.setPassword(DigestUtils.md5(user.getPassword()));
         user.setRegisterTime(LocalDateTime.now());
-        return ResultUtil.flag(iUserService.save(user));
+        boolean save = iUserService.save(user);
+        if (!save){
+            return ResultUtil.error(Constant.REGISTER_FAIL);
+        }
+            ArrayList<Integer> list = new ArrayList<>();
+            list.add(20);
+            list.add(21);
+            list.add(22);
+            List<Project> projectList = iProjectService.listByIds(list);
+            for (Project project : projectList) {
+                project.setCreateId(user.getUserId());
+                project.setCreateTime(LocalDateTime.now());
+                project.setCreateUser(user.getNickname());
+            }
+            save = iProjectService.saveBatch(projectList);
+            if (!save){
+                return ResultUtil.error(Constant.REGISTER_FAIL);
+            }
+            List<Apidetail> apidetailList = iApidetailService.list(new QueryWrapper<Apidetail>().lambda().eq(Apidetail::getProjectId, list));
+            for (Apidetail apidetail : apidetailList) {
+                apidetail.setCreateId(user.getUserId());
+                apidetail.setCreateTime(LocalDateTime.now());
+                apidetail.setCreateUser(user.getNickname());
+            }
+            save = iApidetailService.saveBatch(apidetailList);
+            if (!save){
+                return ResultUtil.error(Constant.REGISTER_FAIL);
+            }
+            List<Category> categoryList = iCategoryService.list(new QueryWrapper<Category>().lambda().eq(Category::getProjectId, list));
+            for (Category category : categoryList) {
+                category.setCreateId(user.getUserId());
+                category.setCreateTime(LocalDateTime.now());
+                category.setCreateUser(user.getNickname());
+            }
+            save = iCategoryService.saveBatch(categoryList);
+        return ResultUtil.flag(save);
+    }
+
+    @RequestMapping("/toFind")
+    public ModelAndView toFind(){
+        return new ModelAndView(thyme+"/user/find");
+    }
+
+    @RequestMapping("/sendEmail")
+    public ResultUtil sendEmail(String email,String captchaCode){
+        //判断验证码是否有效
+        Session session = getSession();
+        if (!session.getAttribute("captchaCode").equals(captchaCode)) {
+            return ResultUtil.error("验证码错误或已过期！");
+        }
+        try {
+            HttpServletRequest request = getRequest();
+            String appUrl = request.getScheme() + "://" + request.getServerName();
+            String context = "wwDoc系统密码重置地址："+appUrl+"/user/toReset?validate="+DigestUtils.md5(email);
+            logger.debug("------context==="+context);
+            iMailService.sendHtmlMail(email, "wwDoc—系统密码找回", context);
+            return ResultUtil.success("邮件发送成功，请注意查收!");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            logger.debug("----/user/sendEmail------\n"+e.getMessage());
+            return ResultUtil.error("邮件发送失败！");
+        }
+    }
+
+    @RequestMapping("/toReset")
+    public ModelAndView toReset(String validate){
+        ModelAndView mv = new ModelAndView(thyme + "/user/reset");
+        mv.addObject("valid", validate);
+        return mv;
+    }
+
+    @RequestMapping("/resetPwd")
+    public ResultUtil resetPwd(String password,String validate,String captchaCode){
+        //判断验证码是否有效
+        Session session = getSession();
+        if (!session.getAttribute("captchaCode").equals(captchaCode)) {
+            return ResultUtil.error("验证码错误或已过期！");
+        }
+        List<User> userList = iUserService.list();
+        User users = null;
+        for (User user : userList) {
+            if (DigestUtils.md5(user.getEmail()).equals(validate)){
+                users = user;
+            }
+        }
+        if (users!=null) {
+            users.setPassword(DigestUtils.md5(password));
+            return ResultUtil.flag(iUserService.updateById(users));
+        }else {
+            return ResultUtil.error("密码重置失败，请检查邮箱设置！");
+        }
+
     }
 
 }
