@@ -19,7 +19,7 @@
 
 #### 在线预览地址
 
-[在线预览地址](http://doc.henaumcw.top/)
+[在线预览地址：http://doc.henaumcw.top](http://doc.henaumcw.top/)
 | 测试账号 | 测试密码 |
 | -------- | -------- |
 | admin    | 123456   |
