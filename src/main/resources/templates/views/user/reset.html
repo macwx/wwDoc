@@ -198,16 +198,16 @@
             $.ajax({
                 type: "POST",
                 //这个路径根据自己的情况填写
-                url: '/user/userLogin',
+                url: '/user/resetPwd',
                 data: data,
                 success: function (data) {
                     console.log(data);
                     if (data.code == 0) {
-                        layer.msg('登录成功', {
+                        layer.msg('密码重置成功', {
                             icon: 6,
                             time: 1000 //2秒关闭（如果不配置，默认是3秒）
                         }, function () {
-                            window.location = '/wwDoc';
+                            window.location = '/user/toLogin';
                         });
                     } else {
                         layer.msg(data.msg, {

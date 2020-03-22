@@ -2,7 +2,7 @@
 <configuration>
     <!--======================================= 本地变量 ======================================== -->
     <!--在没有定义${LOG_HOME}系统变量的时候，可以设置此本地变量。提交测试、上线时，要将其注释掉，使用系统变量。 -->
-    <!-- <property name="LOG_HOME" value="D:/data/logs" /> -->
+  <!--   <property name="LOG_HOME" value="D:/data/logs" />-->
 
     <!-- 应用名称：和统一配置中的项目代码保持一致（小写） -->
     <property name="APP_NAME" value="base" />
@@ -10,7 +10,7 @@
     <property name="LOG_MAX_HISTORY" value="180" />
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径 -->
     <!--应用日志文件保存路径 -->
-    <property name="LOG_APP_HOME" value="F:/logs/" />
+    <property name="LOG_APP_HOME" value="home/logs/" />
 
     <!--=========================== 按照每天生成日志文件：默认配置=================================== -->
     <!-- 控制台输出 -->
