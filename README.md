@@ -15,10 +15,10 @@
 - Springboot 2.2.2
 - Mybatis plus 3.3.0
 - Mysql 5.7
-- Layui 2.5.6,Layuimini
+- Layui ,Layuimini
 - Lombok
 - Shiro
-- 七牛云
+- 七牛云图床
 - hutool
 - log4j
 
